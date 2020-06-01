@@ -10,6 +10,7 @@ Hosted on: https://checkmate2020.herokuapp.com
 ### Endpoints
  - /register
  - /login
+ - /me
  - /tic-tac-toe
  - /chain-reaction
  

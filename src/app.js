@@ -11,6 +11,7 @@ const path = require('path')
 const main_router = require('./routers/main')
 const auth_router = require('./routers/auth')
 const chainreaction_router = require('./routers/chain-reaction')
+const game_router = require('./routers/game')
 const cookieParser = require('cookie-parser') 
 /*const graphqlHTTP = require('express-graphql')
 const schema = require('./graphql/schema')*/
@@ -66,6 +67,7 @@ app.use(adminBro.options.rootPath, router)
 app.use(main_router)
 app.use(auth_router)
 app.use(chainreaction_router)
+app.use(game_router)
 
 /*app.use('/graphql', graphqlHTTP(req => ({
     schema: schema,

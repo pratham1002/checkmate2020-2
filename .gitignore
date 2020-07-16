@@ -70,3 +70,4 @@ package-lock.json
 .vscode/*
 
 # Add any unwanted files here
+.gitpod.yml

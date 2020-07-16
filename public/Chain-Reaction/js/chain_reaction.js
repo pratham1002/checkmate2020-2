@@ -53,26 +53,28 @@ start_function = () =>	{
 	document.getElementsByClassName('container')[0].style.visibility="visible" ;
 	document.getElementsByClassName('players')[0].style.visibility="visible" ;
 
-	for(let row_entry=0; row_entry<row; row_entry++)
-		{
-			for(let col_entry=0; col_entry<col; col_entry++)
-			{
-				grid[row_entry][col_entry]=null;
-				let div=document.createElement('div');
-				div.setAttribute('id','r' + row_entry +'c' + col_entry); 
-				div.addEventListener("click",() => {
-					socket.emit('click-chain-reaction', div.id, count_moves%total_players, () => {
-						console.log("move " + valid_move.value)
+	for(let row_entry=0; row_entry<row; row_entry++) {
+		for(let col_entry=0; col_entry<col; col_entry++) {
+			grid[row_entry][col_entry]=null;
+			let div=document.createElement('div');
+			div.setAttribute('id','r' + row_entry +'c' + col_entry); 
+            div.addEventListener("click",() => {
+            // check valid move here then 
+            // 1. freeze the player
+            // 2. send the click
+                if (valid_move.value) {
+                    document.getElementsByClassName('container')[0].style.pointerEvents = "none";
+                    socket.emit('click-chain-reaction', div.id, count_moves%total_players, () => {
+						console.log("move")
 						socket.emit('freeze-chain-reaction', valid_move.value)
 					})
-					
-					
-				})
-				document.getElementsByClassName('container')[0].appendChild(div);
-				cssMulti('r' + row_entry +'c' + col_entry,{'grid-column': col_entry+1 , 'grid-row': row_entry+1}) 
+                }		
+			})
+			document.getElementsByClassName('container')[0].appendChild(div);
+			cssMulti('r' + row_entry +'c' + col_entry,{'grid-column': col_entry+1 , 'grid-row': row_entry+1}) 
 							
-			}
 		}
+	}
 		setTimeout(()=>{document.getElementsByClassName('container')[0].style.zIndex="1";} ,2000) 
 		document.getElementById('modal').style.transform="translateY(-100vh)" ;
 		let elem = document.documentElement;
@@ -438,10 +440,10 @@ async function play() {
 			document.getElementsByClassName('container')[0].style.pointerEvents = "auto";
 		})
 
-		socket.on('freezePlayer-chain-reaction', () => {
-			console.log("freeze, waiting for opponent's move")
-			document.getElementsByClassName('container')[0].style.pointerEvents = "none";
-		})
+		// socket.on('freezePlayer-chain-reaction', () => {
+		// 	console.log("freeze, waiting for opponent's move")
+		// 	document.getElementsByClassName('container')[0].style.pointerEvents = "none";
+		// })
 	}
 	catch (e) {
 		console.log("error")

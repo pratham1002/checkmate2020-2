@@ -402,7 +402,7 @@ function restart(){
 ////////////////////////////////////////////////////////////////////////////////
 // const { username } = Qs.parse(location.search, { ignoreQueryPrefix: true })
 
-const url = "http://localhost:3000/me"  // change to production url later
+const url = window.location.origin + "/me"
 var username = ""
 
 async function play() {

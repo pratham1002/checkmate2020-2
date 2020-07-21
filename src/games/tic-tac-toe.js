@@ -24,8 +24,9 @@ io.on('connection', (socket) => {
 
             socket.join(user.room)
 
-            console.log('Paired on join', getPairedUsers())
-            console.log('Unpaired', getUnpairedUsers())
+            console.log('Paired users list:', getPairedUsers())
+            
+            console.log('Unpaired users list:', getUnpairedUsers()); 
 
             callback('joined')
         }
@@ -58,7 +59,9 @@ io.on('connection', (socket) => {
     socket.on('play-tic-tac-toe', (opponent, username, divId) => {
         const user = getUser(username)
         // console.log(user.room)
-        socket.to(user.room).emit('opponentPlayed-tic-tac-toe', opponent, divId);
+        if (user !== undefined) {
+            socket.to(user.room).emit('opponentPlayed-tic-tac-toe', opponent, divId);
+        }
         // callback();
     })
 

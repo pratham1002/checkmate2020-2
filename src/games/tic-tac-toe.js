@@ -41,8 +41,10 @@ io.on('connection', (socket) => {
                 console.log(username)
                 const user = getUser(username)
                 // const opponent = getOpponent(socket.id)
-                // callback(true, opponent.id)
-                socket.to(user.room).emit('start-tic-tac-toe')
+                // callback(true, opponent.id)'
+                if (user !== undefined) {
+                    socket.to(user.room).emit('start-tic-tac-toe')
+                }
                 // io.to(opponent.id).emit('freezePlayer')
                 
             }

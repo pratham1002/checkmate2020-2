@@ -13,4 +13,4 @@ Hosted on: https://checkmate2020.herokuapp.com
  - /me
  - /tic-tac-toe
  - /chain-reaction
- 
+ - /leaderboard

@@ -65,9 +65,9 @@ let Arr_box = [
         ]
     ]
 ]
-var color = ['#66FCF1', 'white']
-var dark_blue = '#17252A'
-var light_blue = '#2c4047'
+var color = ['#66FCF1', '#FFFFFF']
+var dark_blue='#17252A' //rgb(23,37,42)
+var light_blue='#2c4047' //rgb(44,64,71)
 let colored_boxes = []
 let coloured_bigRows = []
 
@@ -100,6 +100,7 @@ function space_calc(sp) {
     return no
 }
 let moved = true
+let winner=false
 
 function space(input) {
     var no = (smallRow * 3) + input
@@ -140,10 +141,13 @@ function space(input) {
         check_small_box()
         clearInterval(myvar)
     
-        decolorize()
-        box_color()
-        // timer()
-        player_change()
+        if (winner == false) {
+            decolorize()
+            checking_unfilled()
+            box_color()
+            //timer()
+            player_change()
+        }
 
         sendClic = true    
     }
@@ -164,14 +168,14 @@ function timer() {
     var old_time = d.getTime();
     moved = true
     //console.log(dash_length)
-    var dash_off = dash_length / 1000
+    var dash_off = dash_length / 10
     document.getElementsByClassName('dash0')[0].style.strokeDasharray = dash_length
     clearInterval(myvar)
     myvar = setInterval(function () {
         let new_time = new Date().getTime()
         let sec = Math.floor((new_time - old_time) / 10)
         document.getElementsByClassName('dash0')[0].style.strokeDashoffset = dash_off * sec
-        if (sec > 1000) {
+        if (sec > 10) {
             moved = false
             clearInterval(myvar)
             //console.log('comp')
@@ -182,25 +186,71 @@ function timer() {
     
 
 }
-function random() {
-    let s_row = [], s_box = []
-    var i = Math.floor(Math.random() * colored_boxes.length)
-    var row = coloured_bigRows[i]
+
+function checking_unfilled() {
+    var Arr = Arr_box[bigRow][smallBox]
+    var box_no=bigRow*3+smallBox
+    // console.log(Arr)
+    found=false
+    if (Arr != 1 && Arr != 2) {
+        for(var i=0;i<3;i++){
+            for(var j=0;j<3;j++){
+                var no=(i*3)+j
+                if(Arr[i][j]==''){
+                    found = true
+                
+                    break
+                }
+            }
+        }
+        if (found == false) {
+            console.log('black')
+
+            document.getElementsByClassName('small-box')[box_no].style.backgroundColor='#000000'
+            document.getElementsByClassName('small-box')[box_no].style.borderColor = '#000000'
+            
+        }
+    }
+    
+    
+}
+
+
+function random(){
+    let s_row=[],s_box=[]
+    var i=Math.floor(Math.random()*colored_boxes.length)
+    var row=coloured_bigRows[i]
     var box = colored_boxes[i]
-    for (var k = 0; k < 3; k++) {
-        for (var l = 0; l < 3; l++) {
-            let val = Arr_box[row][box][k][l]
-            if (val == '') {
+    if (colored_boxes.length==0) {
+        console.log('Nobody Wins')
+        document.getElementsByClassName('box')[0].style.backgroundColor = 'black'
+        document.getElementsByClassName('box')[0].style.borderColor = 'black'
+    }
+        
+    for(var k=0;k<3;k++){
+        for (var l = 0; l < 3; l++){
+            
+            let val=Arr_box[row][box][k][l]
+            if(val==''){
                 s_row.push(k)
                 s_box.push(l)
             }
         }
     }
-    var j = Math.floor(Math.random() * s_box.length)
-    bigRow = row
-    smallBox = box
+    var j=Math.floor(Math.random()*s_box.length)
+    bigRow=row
+    smallBox=box
     smallRow = s_row[j]
-    space(s_box[j])
+    if (s_box[j]== undefined) {
+        console.log(s_box)
+        console.log(s_row)
+        console.log(colored_boxes)
+        console.log(coloured_bigRows)
+    }
+        
+    else {
+        space(s_box[j])
+    }
 }
 function decolorize() {
     for (var i = 0; i < 3; i++) {
@@ -221,10 +271,11 @@ function decolorize() {
         }
     }
 }
-function box_color() {
-    var no = (bigRow * 27) + (smallBox * 9)
-    var old_box = (bigRow * 3) + smallBox
-    var new_box = (smallRow * 3) + spaces
+function box_color(){
+    var no=(bigRow*27)+(smallBox*9)
+    var old_box=(bigRow*3)+smallBox
+    var new_box=(smallRow*3)+spaces
+    let player = parseInt(document.getElementById('pl-no').innerHTML)
 
 
     // var border_color=document.getElementsByClassName('space')[no].style.borderColor
@@ -236,68 +287,84 @@ function box_color() {
     //         }
     //     }
     // }
-    colored_boxes = []
-    coloured_bigRows = []
-    if (document.getElementsByClassName('small-box')[new_box].style.backgroundColor != 'rgb(44, 64, 71)') {
+    colored_boxes=[]
+    coloured_bigRows=[]
+    if(document.getElementsByClassName('small-box')[new_box].style.backgroundColor!='rgb(44, 64, 71)' && document.getElementsByClassName('small-box')[new_box].style.backgroundColor!='rgb(0, 0, 0)'){
+        // console.log('From if Statement')
         document.getElementsByClassName('small-box')[new_box].style.backgroundColor = light_blue
-        document.getElementsByClassName('small-box')[new_box].style.borderColor = dark_blue
+        document.getElementsByClassName('small-box')[new_box].style.borderColor=dark_blue
         colored_boxes.push(spaces)
         coloured_bigRows.push(smallRow)
-        for (var i = 0; i < 3; i++) {
-            for (var j = 0; j < 3; j++) {
-                document.getElementsByClassName('space')[(smallRow * 27) + (spaces * 9) + (i * 3) + j].style.borderColor = dark_blue
+        for(var i=0;i<3;i++){
+            for(var j=0;j<3;j++){
+                document.getElementsByClassName('space')[(smallRow*27)+(spaces*9)+(i*3)+j].style.borderColor=dark_blue
             }
         }
     }
     else {
-        for (var i = 0; i < 3; i++) {
-            for (var j = 0; j < 3; j++) {
-                var box = (i * 3) + j
-                var border_c = document.getElementsByClassName('small-box')[box].style.borderColor
-                if (box != new_box && box != old_box && border_c != 'rgb(102, 252, 241)' && border_c != 'rgb(255, 255, 255)') {
-                    colored_boxes.push(j)
-                    coloured_bigRows.push(i)
-                    document.getElementsByClassName('small-box')[box].style.backgroundColor = light_blue
-                    document.getElementsByClassName('small-box')[box].style.borderColor = dark_blue
-                    for (var p = 0; p < 3; p++) {
-                        for (var q = 0; q < 3; q++) {
-                            document.getElementsByClassName('space')[(i * 27) + (j * 9) + (p * 3) + q].style.borderColor = dark_blue
+        // console.log('From Else statement')
+        for(var i=0;i<3;i++){
+            for(var j=0;j<3;j++){
+                    var box=(i*3)+j
+                    var border_c=document.getElementsByClassName('small-box')[box].style.borderColor
+                    if (box != new_box && border_c != 'rgb(102, 252, 241)' && border_c != 'rgb(255, 255, 255)' && border_c != 'rgb(0, 0, 0)') {
+                        
+                        colored_boxes.push(j)
+                        coloured_bigRows.push(i)
+                        document.getElementsByClassName('small-box')[box].style.backgroundColor=light_blue
+                        document.getElementsByClassName('small-box')[box].style.borderColor=dark_blue
+                        for(var p=0;p<3;p++){
+                            for(var q=0;q<3;q++){
+                                document.getElementsByClassName('space')[(i*27)+(j*9)+(p*3)+q].style.borderColor=dark_blue
+                            }
                         }
                     }
-                }
             }
         }
     }
 
+    if (colored_boxes.length==0) {
+        console.log('Nobody Wins')
+        document.getElementsByClassName('box')[0].style.backgroundColor = 'black'
+        document.getElementsByClassName('box')[0].style.borderColor = 'black'
+        socket.emit('end-tic-tac-toe', player)
+        console.log(req.user.score)
+        document.location.reload(true)
+    }
+    
 }
-function check_small_box() {
-
-    var match = []
-    let player = parseInt(document.getElementById('pl-no').innerHTML)
-    var Arr = Arr_box[bigRow][smallBox]
-    for (var i = 0; i < 3; i++) {
-        for (var j = 0; j < 3; j++) {
-            var no = (i * 3) + j
-            if (Arr[i][j] == player) {
+function check_small_box(){
+    
+    var match=[]
+    let player=parseInt(document.getElementById('pl-no').innerHTML)
+    var Arr=Arr_box[bigRow][smallBox]
+    for(var i=0;i<3;i++){
+        for(var j=0;j<3;j++){
+            var no=(i*3)+j
+            if(Arr[i][j]==player){
                 match.push(no)
             }
         }
     }
-    var answer = check_match(match)
-    if (answer) {
-        var box = (bigRow * 3) + smallBox
+    let answer = check_match(match)
     
-        document.getElementsByClassName('small-box')[box].style.backgroundColor = light_blue
-        document.getElementsByClassName('small-box')[box].style.borderColor = color[player - 1]
-        for (var i = 0; i < 3; i++) {
-            for (var j = 0; j < 3; j++) {
-                var no = (bigRow * 27) + (smallBox * 9) + (i * 3) + j
-                document.getElementsByClassName('space')[no].style.borderColor = color[player - 1]
+        
+    if(answer){
+        var box=(bigRow*3)+smallBox
+        
+        document.getElementsByClassName('small-box')[box].style.backgroundColor=light_blue
+        document.getElementsByClassName('small-box')[box].style.borderColor=color[player-1]
+        for(var i=0;i<3;i++){
+            for(var j=0;j<3;j++){
+                var no=(bigRow*27)+(smallBox*9)+(i*3)+j
+                document.getElementsByClassName('space')[no].style.borderColor=color[player-1]
             }
         }
-        Arr_box[bigRow][smallBox] = player
+        Arr_box[bigRow][smallBox]=player
         check_big_box()
     }
+    
+    
 }
 function check_big_box() {
     var match = []
@@ -312,17 +379,11 @@ function check_big_box() {
     }
 
     var answer = check_match(match)
-    if (answer) {
-        for (var i = 0; i < 9; i++) {
-            document.getElementsByClassName('small-box')[i].style.backgroundColor = light_blue
-        }
-        for (var i = 0; i < 81; i++) {
-            document.getElementsByClassName('space')[i].style.borderColor = color[player - 1]
-        }
-        alert('Congrats Player-' + player + ' on winning the game.')
-
+    if (answer == true) {
+        document.getElementsByClassName('box')[0].style.borderColor = color[player - 1]
+        console.log('won')
+        winner=true
         socket.emit('end-tic-tac-toe', player)
-
         document.location.reload(true)
     }
 }
@@ -355,6 +416,7 @@ function player_change() {
     }
     document.getElementById('pl-no').innerHTML = new_player.toString()
     document.getElementsByClassName('other-elem')[0].style.color = color[new_player - 1]
+    document.getElementsByClassName('user')[0].style.color=color[new_player-1]
     document.getElementsByClassName('dash0')[0].style.stroke = color[new_player - 1]
 }
 

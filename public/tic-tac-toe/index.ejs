@@ -9,13 +9,17 @@
     </style>
 </head>
 <body>
-    <%= user.username %>
+    
     <div class="wrapper">
         <div class="heading">TIC TAC TOE</div>
         <div class="other-elem">
             <div class="player">
-                PLAYER- 
-                <div id="pl-no">1</div>
+                <div style="display: flex;">
+                    PLAYER- 
+                    <div id="pl-no">1</div>
+                </div>
+               
+                <div id='user' class="user"><%= user.username %></div>
             </div>
             <svg class="player-img" >
                 <rect  rx="5" ry="5" class="dash0"

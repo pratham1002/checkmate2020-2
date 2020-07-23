@@ -25,13 +25,11 @@
 
         <button id=start onclick="start()">START!</button>
     </aside>
-    <div class="players">
-        <div id="player_score"></div>
-    </div>   
-    <div class="container">
-        
+    <div class="container"></div>
+    <div id="over">
+        <div id="winner"></div>
+        <button onclick="redirect()" >Continue</button>
     </div>
-<div id="over"><div id="winner"></div><button onclick="()=>{window.location.replace('/tic-tac-toe')}">Continue</button></div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.1/mustache.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.6.0/qs.min.js"></script>

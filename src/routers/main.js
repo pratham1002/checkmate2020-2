@@ -38,19 +38,22 @@ router.get('/leaderboard', auth, async (req, res) => {
         score: -1
 	})
 	
-	let rank;
+	let rank,score;
 
 	for (let i = 0; i < players.length; i++) {
 		if (players[i].username === req.user.username) {
-			rank = i + 1
+            rank = i + 1
+            score=players[i].score
 			break
 		}
 	}
 	players.length = players.length < 10 ? players.length : 10
-	res.send({
-		"players": players,
-		"rank": rank,		
-	})
+	res.render('leaderboard',data={
+        allPlayers:players,
+        player: req.user.username,
+        playerRank: rank,
+        playerScore:score
+    } )
 })
 
 router.get("/tic-tac-toe", auth, (req, res) => {
@@ -62,7 +65,8 @@ router.get("/tic-tac-toe", auth, (req, res) => {
 
 router.get("/me", auth, (req, res) => {
 	res.send({
-		"username": req.user.username,
+        "username": req.user.username,
+        "score":req.user.score
 	})
 })
 

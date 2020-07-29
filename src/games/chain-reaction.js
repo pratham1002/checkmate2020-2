@@ -75,11 +75,11 @@ io.on('connection', (socket) => {
         try{        
             if (not_opponent) {
                 const winner = getUser(user)
-                console.log(winner)
+                socket.emit('winner-score-update',winner.username)
             }
             else {
                 const winner = getOpponent(user)
-                console.log(winner)
+                socket.emit('winner-score-update',winner.username)
             }
         }
         catch (e) {

@@ -1,6 +1,6 @@
 const socket = io()
 let valid_move = { value: true }
-let row=6,col=11,total_players=2,count_moves=0,hidden_move=0,orb_no=0,player,bg_color,score=[0,0],clicks=0;
+let row=6,col=11,total_players=2,count_moves=0,hidden_move=0,orb_no=0,player,bg_color,clicks=0;
 let bool,existing_div,matches,prev_parent_id,living_players=[0],current_status=[];
 let game_over=[],p1=0,p0=0;
 let grid=[];
@@ -8,18 +8,14 @@ let opponent = { id: 0 };
 let flag = 0;
 for(let r=0; r<row; r++)
     grid[r]=[];
-////////////////////////////////////////////////////////////////////////////////
 
-function cssMulti(element,css){
+
+function cssMultiStyles(element,css){
     let ele=document.getElementById(element);
     for(i in css){
         ele.style[i]=css[i];
     }                
 }
-////////////////////////////////////////////////////////////////////////////////
-// window.onload= function () {
-// 	start();
-// 	}
 
 function openFullscreen(elem) {
 	if (elem.requestFullscreen) {
@@ -32,7 +28,7 @@ function openFullscreen(elem) {
 		elem.msRequestFullscreen();
 	}
 }
-////////////////////////////////////////////////////////////////////////////////
+
 function show_instructions(){
 	clicks++;
 	let button=document.getElementsByClassName('info')[0]
@@ -47,11 +43,9 @@ function show_instructions(){
 	}
 }
 
-////////////////////////////////////////////////////////////////////////////////
 
 start_function = () =>	{
 	document.getElementsByClassName('container')[0].style.visibility="visible" ;
-	document.getElementsByClassName('players')[0].style.visibility="visible" ;
 
 	for(let row_entry=0; row_entry<row; row_entry++) {
 		for(let col_entry=0; col_entry<col; col_entry++) {
@@ -67,11 +61,11 @@ start_function = () =>	{
                     socket.emit('click-chain-reaction', div.id, count_moves%total_players, () => {
 						console.log("move")
 						socket.emit('freeze-chain-reaction', valid_move.value)
-					})
-                }		
-			})
-			document.getElementsByClassName('container')[0].appendChild(div);
-			cssMulti('r' + row_entry +'c' + col_entry,{'grid-column': col_entry+1 , 'grid-row': row_entry+1}) 
+                    })
+                }
+            })
+            document.getElementsByClassName('container')[0].appendChild(div);
+            cssMultiStyles('r' + row_entry +'c' + col_entry,{'grid-column': col_entry+1 , 'grid-row': row_entry+1}) 
 							
 		}
 	}
@@ -87,7 +81,7 @@ function start(){
 	// screen.orientation.lock('landscape');
 
 	let is_paired = false
-	socket.emit('pair-chain-reaction', (bool, id) => {
+	socket.emit('pair-chain-reaction', async(bool, id) => {
 		opponent.id = id
 		is_paired = bool
 		console.log("Paired ", is_paired)
@@ -100,7 +94,6 @@ function start(){
 	})
 
 }
-////////////////////////////////////////////////////////////////////////////////
 
 function move(id,player,bool,random){
     
@@ -121,11 +114,11 @@ function move(id,player,bool,random){
         capture(id,orb_color,player);
         let new_div=document.createElement('div');
 		new_div.setAttribute('id',orb_no);
-		document.getElementById(id).setAttribute('class',player);
+		// document.getElementById(id).setAttribute('class',player);
 		document.getElementById(id).appendChild(new_div);
 		check_split(id,player,false);
 		if(document.getElementById(orb_no))
-        cssMulti(orb_no,{'background':orb_color});
+        cssMultiStyles(orb_no,{'background':orb_color});
 		bool=false;
 
 		let container=document.getElementsByClassName('container')[0];
@@ -145,14 +138,14 @@ function move(id,player,bool,random){
 	}
 }
 
-////////////////////////////////////////////////////////////////////////////////
+
 function add_orb(id,player){
 	player_num = player.match(/\d+/g);
 	matches = id.match(/\d+/g);
 	for(let i=-1; i<2;i++)
 		for(let j=-1; j<2;j++)
 			{
-				if(i!=j && (i-j == 1 || i-j ==0 || i-j==-1))
+				if(i!=j && (i-j == 1 || i-j==-1))
 					{
 						if(document.getElementById('r'+(+matches[0]+i) +'c'+ (+matches[1]+j) ))
 						{
@@ -162,14 +155,13 @@ function add_orb(id,player){
 							orb_color=color.orb_color;
 							capture('r'+(+matches[0]+i) +'c'+(+matches[1]+j),orb_color,player);
 							document.getElementById('r'+(+matches[0]+i) +'c'+ (+matches[1]+j) ).appendChild(div);
-							cssMulti(orb_no,{'background':orb_color});
+                            cssMultiStyles(orb_no,{'background':orb_color});
+                            check_split(('r'+(+matches[0]+i) +'c'+ (+matches[1]+j) ),player,true);
 						}
 					}
 			}	
 	bool=false;
-	//check();
 }
-////////////////////////////////////////////////////////////////////////////////
 
 function get_color(id,player,bool,player_num){
         let orb_color;
@@ -189,7 +181,6 @@ function get_color(id,player,bool,player_num){
         return color;
 }
 
-////////////////////////////////////////////////////////////////////////////////
 
 function capture(id,orb_color,capturer){
     for(existing_div of document.getElementById(id).childNodes)   //while capturing this will turn all into conquerer's color
@@ -201,113 +192,106 @@ function capture(id,orb_color,capturer){
 
 	
 }
-////////////////////////////////////////////////////////////////////////////////
 
 function check_split(id,player,bool){
 	if(document.getElementById(id)!=null)
 		{
 			if(id=='r0c0'||id=='r0c'+(col-1)||id=='r'+(row-1)+'c0'||id=='r'+(row-1)+'c'+(col-1)){
-				if(document.getElementById(id).childElementCount>=2)
-					{
-						split_two(id,player);  
-						// player_num = player.match(/\d+/g);
-						// score[+player_num[0]]+=10;
-					}
-				}
+				if(document.getElementById(id).childElementCount==2){
+                    split_two(id,player);  
+                }
+            }
 			else if(id.substring(0,2)=='r0'|| id.substring(2,4)=='c0'|| id.substring(0,2)=='r'+(row-1) || id.substring(2,5)=='c'+(col-1)){
-				if( document.getElementById(id).childElementCount>=3)
-					{ 
-						split_three(id,player);
-						// player_num = player.match(/\d+/g);
-						// score[+player_num[0]]+=15;
-					}
-				}
+				if( document.getElementById(id).childElementCount==3){ 
+                    split_three(id,player);
+                }
+            }
 			else{	
-				if(document.getElementById(id).childElementCount>=4 )
-				{
+				if(document.getElementById(id).childElementCount==4 ){
 					split_four(id,player);
-					// player_num = player.match(/\d+/g);
-					// score[+player_num[0]]+=20;     
 				}
 		}
 	}
 }	
-////////////////////////////////////////////////////////////////////////////////
+
 function split_four(id,player){
 	let parentDiv=document.getElementById(id);
-    // for(div of parentDiv.childNodes)             
-	// {div.parentNode.removeChild(div) } 
-	// const myNode = document.getElementById("foo");
-	// await new Promise(r => setTimeout(r, 500));
-
 	setTimeout(animateDelete,0,id,parentDiv,player);
-	//delete_orbs(id,parentDiv,player);
 	check(count_moves,player);
-
 }
-// function sleep(miliseconds) {
-// 	var currentTime = new Date().getTime();
- 
-// 	while (currentTime + miliseconds >= new Date().getTime()) {
-// 	}
-//  }
-////////////////////////////////////////////////////////////////////////////////
 
 function split_two(id,player){
 	let parentDiv=document.getElementById(id);
 	switch(id){
-		case 'r0c0':  	parentDiv.childNodes[0].style.animation="split_right 0.5s linear 0s";
-						parentDiv.childNodes[1].style.animation="split_down 0.5s linear 0s";
-							break;
+		case 'r0c0':  {	
+            parentDiv.childNodes[0].style.animation="split_right 0.5s linear 0s";
+            parentDiv.childNodes[1].style.animation="split_down 0.5s linear 0s";
+            break;
+        }
 
-	case 'r0c'+(col-1):  	parentDiv.childNodes[0].style.animation="split_left 0.5s linear 0s";
-							parentDiv.childNodes[1].style.animation="split_down 0.5s linear 0s";
-							break;
+        case 'r0c'+(col-1):{
+            parentDiv.childNodes[0].style.animation="split_left 0.5s linear 0s";
+            parentDiv.childNodes[1].style.animation="split_down 0.5s linear 0s";
+            break;
+        }
 								
-case 'r'+(row-1)+'c0':  parentDiv.childNodes[0].style.animation="split_right 0.5s linear 0s";
-						parentDiv.childNodes[1].style.animation="split_top 0.5s linear 0s";
-							break;
+        case 'r'+(row-1)+'c0':  {
+            parentDiv.childNodes[0].style.animation="split_right 0.5s linear 0s";
+            parentDiv.childNodes[1].style.animation="split_top 0.5s linear 0s";
+            break;
+        }
 
-case 'r'+(row-1)+'c'+(col-1):   parentDiv.childNodes[0].style.animation="split_left 0.5s linear 0s";
-								parentDiv.childNodes[1].style.animation="split_top 0.5s linear 0s";
-							break;  
-				}
-	setTimeout(delete_orbs,00,id,parentDiv,player);
+        case 'r'+(row-1)+'c'+(col-1):{
+            parentDiv.childNodes[0].style.animation="split_left 0.5s linear 0s";
+            parentDiv.childNodes[1].style.animation="split_top 0.5s linear 0s";
+            break;
+        }
+    }
+	setTimeout(()=>{delete_orbs(id,parentDiv,player)},500);
 	check(count_moves,player);
 
 }
-////////////////////////////////////////////////////////////////////////////////
 
 function split_three(id,player){
 	let parentDiv=document.getElementById(id);
 	
 	matches = id.match(/\d+/g);
     switch(+matches[0]){
-        case 0: parentDiv.childNodes[0].style.animation="split_right 0.5s linear 0s";
-				parentDiv.childNodes[1].style.animation="split_down 0.5s linear 0s";
-				parentDiv.childNodes[2].style.animation="split_left 0.5s linear 0s";
-                break;
-    case (row-1): 	parentDiv.childNodes[0].style.animation="split_right 0.5s linear 0s";
-					parentDiv.childNodes[1].style.animation="split_top 0.5s linear 0s";
-					parentDiv.childNodes[2].style.animation="split_left 0.5s linear 0s";
-                  break;        
+        case 0: {
+            console.log(+matches[0])
+            parentDiv.childNodes[0].style.animation="split_right 0.5s linear 0s";
+            parentDiv.childNodes[1].style.animation="split_down 0.5s linear 0s";
+            parentDiv.childNodes[2].style.animation="split_left 0.5s linear 0s";
+            break;
+        }
+        case (row-1): {	
+            console.log(+matches[0])
+            parentDiv.childNodes[0].style.animation="split_right 0.5s linear 0s";
+            parentDiv.childNodes[1].style.animation="split_top 0.5s linear 0s";
+            parentDiv.childNodes[2].style.animation="split_left 0.5s linear 0s";
+            break; 
+        }       
     }
     switch(+matches[1]){
-		case 0: parentDiv.childNodes[0].style.animation="split_right 0.5s linear 0s";
-				parentDiv.childNodes[1].style.animation="split_top 0.5s linear 0s";
-				parentDiv.childNodes[2].style.animation="split_down 0.5s linear 0s";
-			break;
-    case (col-1): 	parentDiv.childNodes[0].style.animation="split_left 0.5s linear 0s";
-					parentDiv.childNodes[1].style.animation="split_top 0.5s linear 0s";
-					parentDiv.childNodes[2].style.animation="split_down 0.5s linear 0s";
-                break;       
+        case 0:{ 
+            console.log(+matches[0])
+            parentDiv.childNodes[0].style.animation="split_right 0.5s linear 0s";
+            parentDiv.childNodes[1].style.animation="split_top 0.5s linear 0s";
+            parentDiv.childNodes[2].style.animation="split_down 0.5s linear 0s";
+            break;
+        }
+        case (col-1): {	
+            console.log(+matches[0])    
+                parentDiv.childNodes[0].style.animation="split_left 0.5s linear 0s";
+                parentDiv.childNodes[1].style.animation="split_top 0.5s linear 0s";
+                parentDiv.childNodes[2].style.animation="split_down 0.5s linear 0s";
+            break; 
+        }     
     }
-	delete_orbs(id,parentDiv,player);
+	setTimeout(()=>{delete_orbs(id,parentDiv,player)},500);
 	check(count_moves,player);
-
 }
 
-////////////////////////////////////////////////////////////////////////////////
 function animateDelete(id,parentDiv,player){
 	setTimeout(function()
 	{parentDiv.childNodes[0].style.animation="split_right 0.5s linear 0s";
@@ -315,31 +299,17 @@ function animateDelete(id,parentDiv,player){
 	parentDiv.childNodes[2].style.animation="split_left 0.5s linear 0s";
 	parentDiv.childNodes[3].style.animation="split_down 0.5s linear 0s";
 	},000);
-	
-	setTimeout(function(){delete_orbs(id,parentDiv,player);},600);
-
-	
+	setTimeout(()=>{delete_orbs(id,parentDiv,player)},500);	
 }
-function delete_orbs(id,parentDiv,player){
 
-	setTimeout(function(){add_orb(id,player);},5);
-	setTimeout(function(){while (parentDiv.firstChild) {
+function delete_orbs(id,parentDiv,player){
+    add_orb(id,player);
+    while (parentDiv.firstChild) {
 		parentDiv.removeChild(parentDiv.firstChild);
 	}
 	parentDiv.removeAttribute('class'); 
-	},10);
-	setTimeout(function(){for(let i=0; i<row;i++)
-		for(let j=0; j<col;j++)
-		{
-			check_split('r'+i +'c'+ j,player,true);
-		};},15);
-	
-	}
-////////////////////////////////////////////////////////////////////////////////
+}
 
-
-
-///////////////////////////////////////////////////////////////////////////////
 function check(count_moves,player){
     for(let row_entry=0; row_entry<row; row_entry++)
         {current_status[row_entry]=[]
@@ -349,40 +319,36 @@ function check(count_moves,player){
 				if(div.className)
 					{current_status[row_entry][col_entry]={'parent_class':div.className, 'no_of_orbs': div.childElementCount}
 					game_over.push(div.className.match(/\d+/g));
-					//alert(game_over);
-					// for(let i=0;i<living_players.length;i++)
-					// {if(living_players[i] != +game_over[0])
-					// living_players[i]=(+game_over[0])	}}
             }
 		}  
 	}  
-		for(let i=0;i<game_over.length;i++)
-			{
-				if(+game_over[i] == 1)
-					p1++;
-				else if(+game_over[i]==0)
-					p0++;			
-			}
-			if(count_moves>total_players && (p1 == 0 || p0 == 0))
-				{
-					document.getElementsByClassName('container')[0].style.zIndex="0";
-					cssMulti('over',{'visibility':"visible",'z-index':"9999",'transform':'translateY(-100vh)',  'transition': 'transform 1s'})
-					winner=player.match(/\d+/g);
-					console.log(winner)
-					if (winner[0] == '0' && flag == 0) {
-						flag += 1
-						socket.emit('winner-chain-reaction', opponent.id, false)
-					}
-					else if (winner[0] == '1' && flag == 0) {
-						flag += 1
-						socket.emit('winner-chain-reaction', opponent.id, true)
-					}
-					
-					document.getElementById('winner').innerHTML='Player '+(+winner[0]+1)+' Wins!'
-				}
-					p0=0;p1=0;game_over=[];
+    for(let i=0;i<game_over.length;i++)
+        {
+            if(+game_over[i] == 1)
+                p1++;
+            else if(+game_over[i]==0)
+                p0++;			
+        }
+    if(count_moves>total_players && (p1 == 0 || p0 == 0))
+        {
+            document.getElementsByClassName('container')[0].style.zIndex="0";
+            cssMultiStyles('over',{'visibility':"visible",'z-index':"9999",'transform':'translateY(-100vh)',  'transition': 'transform 1s'})
+            winner=player.match(/\d+/g);
+            console.log(winner)
+            if (winner[0] == '0' && flag == 0) {
+                flag += 1
+                socket.emit('winner-chain-reaction', opponent.id, false)
+            }
+            else if (winner[0] == '1' && flag == 0) {
+                flag += 1
+                socket.emit('winner-chain-reaction', opponent.id, true)
+            }
+            
+            document.getElementById('winner').innerHTML='Player '+(+winner[0]+1)+' Wins!'
+        }
+    p0=0;p1=0;game_over=[];
 }
-////////////////////////////////////////////////////////////////////////////////
+
 
 function restart(){
 	for(let row_entry=0; row_entry<row; row_entry++)
@@ -401,18 +367,17 @@ function restart(){
 	container.style.border="0.2em solid red";
 }
 
-////////////////////////////////////////////////////////////////////////////////
 // const { username } = Qs.parse(location.search, { ignoreQueryPrefix: true })
 
 const url = window.location.origin + "/me"
-var username = ""
+let username = "",score=0
 
 async function play() {
 	try {
 		const res = await fetch(url)
 		const user = await res.json()
 		username = user.username
-		
+		score = user.score
 		socket.emit('join-chain-reaction', username, (error) => {
 			if (error) {
 				return console.log(error)
@@ -440,10 +405,24 @@ async function play() {
 			document.getElementsByClassName('container')[0].style.pointerEvents = "auto";
 		})
 
-		// socket.on('freezePlayer-chain-reaction', () => {
-		// 	console.log("freeze, waiting for opponent's move")
-		// 	document.getElementsByClassName('container')[0].style.pointerEvents = "none";
-		// })
+		socket.on('freezePlayer-chain-reaction', () => {
+			console.log("freeze, waiting for opponent's move")
+			document.getElementsByClassName('container')[0].style.pointerEvents = "none";
+        })
+        
+        socket.on('winner-score-update',async(winner)=>{
+            if(winner==username){
+               await fetch('/score',{
+                method: 'POST',
+                body: JSON.stringify({score:100}),
+                headers: { 
+                    "Content-type": "application/json; charset=UTF-8"
+                }
+            })
+            .then(res=>console.log(res.json()))
+            .catch(err=>console.log(err))
+            }
+        })
 	}
 	catch (e) {
 		console.log("error")
@@ -452,6 +431,9 @@ async function play() {
 
 play()
 
+redirect=()=>{
+    window.location.replace('/tic-tac-toe')
+}
 	// const res = await fetch(url).then(async (res) => {
     //     const result = await res.json().then((user) => {
     //         username = user.username

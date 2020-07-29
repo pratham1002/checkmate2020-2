@@ -23,10 +23,43 @@ io.on('connection', (socket) => {
             }
 
             socket.join(user.room)
-
-            console.log('Paired users list:', getPairedUsers())
+            // let arr_to_be_sent = []
+            // let unpaired = false
+            // let username_lower=username.toLowerCase()
+            // let element,room
             
+            console.log('Paired sers list:', getPairedUsers())
+            // let paired_users = getPairedUsers()
+            // let unpaired_users=getUnpairedUsers()
             console.log('Unpaired users list:', getUnpairedUsers()); 
+
+            // for (elem in unpaired_users) {
+            //     console.log('element is',elem)
+            //     if (unpaired_users[elem].username == username_lower) {
+            //         unpaired = true
+            //         element=unpaired_users[elem]
+            //         break
+            //     }
+            // }
+            // console.log('Unpaired', unpaired)
+            
+            // if (unpaired) {
+            //     arr_to_be_sent=[element]
+            // }
+            // else {
+                
+            //     element = paired_users.find(function(post, index) {
+            //         if(post.username == username_lower)
+            //             return true;
+            //     });
+            //     console.log('Element when paired',element)
+            //     room = element.room
+            //     for (elem in paired_users) {
+            //         if (paired_users[elem].room == room) {
+            //             arr_to_be_sent.push(paired_users[elem])
+            //         }
+            //     }
+            // }
 
             callback('joined')
         }
@@ -39,10 +72,12 @@ io.on('connection', (socket) => {
         try {
             if (isPaired(socket.id)) {
                 console.log(username)
+                
                 const user = getUser(username)
                 // const opponent = getOpponent(socket.id)
                 // callback(true, opponent.id)'
                 if (user !== undefined) {
+                    
                     socket.to(user.room).emit('start-tic-tac-toe')
                 }
                 // io.to(opponent.id).emit('freezePlayer')

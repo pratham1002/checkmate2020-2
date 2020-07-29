@@ -158,12 +158,25 @@ body{
     stroke-width:3;
     fill:none;
 }
-.box{
+.box,.end{
     border:solid 4px transparent;
     background-color: #2c4047;
     fill-opacity: 0.5;
 
 
+}
+.end{
+    padding: 5vh;
+    border-radius: 5px;
+    margin-top: 15vh;
+    min-height: 20vh;
+    min-width: 20vw;
+    font-weight: bolder;
+    display:none;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    color: #add3e0;
 }
 .box,.small-box{
     display: flex;

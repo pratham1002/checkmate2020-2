@@ -1,4 +1,5 @@
 const { io } = require("../app")
+const User = require('../models/user')
 
 const {
     addUser,
@@ -23,9 +24,43 @@ io.on('connection', (socket) => {
             }
 
             socket.join(user.room)
+            // let arr_to_be_sent = []
+            // let unpaired = false
+            // let username_lower=username.toLowerCase()
+            // let element,room
+            
+            console.log('Paired sers list:', getPairedUsers())
+            // let paired_users = getPairedUsers()
+            // let unpaired_users=getUnpairedUsers()
+            console.log('Unpaired users list:', getUnpairedUsers()); 
 
-            console.log('Paired on join', getPairedUsers())
-            console.log('Unpaired', getUnpairedUsers())
+            // for (elem in unpaired_users) {
+            //     console.log('element is',elem)
+            //     if (unpaired_users[elem].username == username_lower) {
+            //         unpaired = true
+            //         element=unpaired_users[elem]
+            //         break
+            //     }
+            // }
+            // console.log('Unpaired', unpaired)
+            
+            // if (unpaired) {
+            //     arr_to_be_sent=[element]
+            // }
+            // else {
+                
+            //     element = paired_users.find(function(post, index) {
+            //         if(post.username == username_lower)
+            //             return true;
+            //     });
+            //     console.log('Element when paired',element)
+            //     room = element.room
+            //     for (elem in paired_users) {
+            //         if (paired_users[elem].room == room) {
+            //             arr_to_be_sent.push(paired_users[elem])
+            //         }
+            //     }
+            // }
 
             callback('joined')
         }
@@ -38,10 +73,14 @@ io.on('connection', (socket) => {
         try {
             if (isPaired(socket.id)) {
                 console.log(username)
+                
                 const user = getUser(username)
                 // const opponent = getOpponent(socket.id)
-                // callback(true, opponent.id)
-                socket.to(user.room).emit('start-tic-tac-toe')
+                // callback(true, opponent.id)'
+                if (user !== undefined) {
+                    
+                    socket.to(user.room).emit('start-tic-tac-toe')
+                }
                 // io.to(opponent.id).emit('freezePlayer')
                 
             }
@@ -58,12 +97,17 @@ io.on('connection', (socket) => {
     socket.on('play-tic-tac-toe', (opponent, username, divId) => {
         const user = getUser(username)
         // console.log(user.room)
-        socket.to(user.room).emit('opponentPlayed-tic-tac-toe', opponent, divId);
+        if (user !== undefined) {
+            socket.to(user.room).emit('opponentPlayed-tic-tac-toe', opponent, divId);
+        }
         // callback();
     })
 
-    socket.on('end-tic-tac-toe', (player) => {
+    socket.on('end-tic-tac-toe', async (player) => {
         // winner recieved from client side, run database changes here
+        const user = await User.findOne({ username: player })
+        user.score += 91
+        await user.save()
     })
 
     socket.on('disconnect', () => {

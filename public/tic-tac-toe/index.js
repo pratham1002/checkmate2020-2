@@ -520,7 +520,7 @@ async function play() {
             freezeClic = true
             sendClic = false
             document.addEventListener("click", freezeClicFn, true);
-            document.getElementById('user').innerHTML=username
+            
             console.log('frozen')
         })
 

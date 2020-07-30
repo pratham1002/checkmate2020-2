@@ -66,6 +66,8 @@ let Arr_box = [
     ]
 ]
 var color = ['#66FCF1', '#FFFFFF']
+var player_text = []
+var player_order=[]
 var dark_blue='#17252A' //rgb(23,37,42)
 var light_blue='#2c4047' //rgb(44,64,71)
 let colored_boxes = []
@@ -101,9 +103,19 @@ function space_calc(sp) {
 }
 let moved = true
 let winner=false
+let last_move = false
+let first_time=true
+let player_1 = false
+let end_result=0
 
 function space(input) {
     var no = (smallRow * 3) + input
+    if (first_time && player_1==false) {
+        player_order = ['', username]
+        player_text=['Not Your Turn', 'Your Turn - ']
+        document.getElementById('user-text').innerHTML = 'Not Your Turn'
+        first_time=false
+    }
 
     spaces = input
     if (Arr_box[bigRow][smallBox] == 1 || Arr_box[bigRow][smallBox] == 2) {
@@ -140,16 +152,33 @@ function space(input) {
         Arr_box[bigRow][smallBox][smallRow][spaces] = player + 1
         check_small_box()
         clearInterval(myvar)
-    
+        console.log('Inside space function')
         if (winner == false) {
             decolorize()
             checking_unfilled()
             box_color()
             //timer()
             player_change()
+
         }
 
         sendClic = true    
+        if (winner) {
+            player_change()
+            
+            setTimeout(function () {
+                let player = parseInt(document.getElementById('pl-no').innerHTML)
+                document.getElementsByClassName('box')[0].style.display = 'none'
+                document.getElementsByClassName('end')[0].style.display = 'flex'
+                if (end_result == 0) {
+                    document.getElementsByClassName('end')[0].innerHTML = 'Nobody Won'
+                
+                }
+                else {
+                    document.getElementsByClassName('end')[0].innerHTML ='Player '+end_result+' won this game.'
+                }
+            },500)
+        }
     }
     else if (color != 'rgb(44, 64, 71)') {
         sendClic=false
@@ -324,12 +353,9 @@ function box_color(){
     }
 
     if (colored_boxes.length==0) {
-        console.log('Nobody Wins')
         document.getElementsByClassName('box')[0].style.backgroundColor = 'black'
         document.getElementsByClassName('box')[0].style.borderColor = 'black'
-        socket.emit('end-tic-tac-toe', player)
-        console.log(req.user.score)
-        document.location.reload(true)
+        end(true)
     }
     
 }
@@ -381,10 +407,10 @@ function check_big_box() {
     var answer = check_match(match)
     if (answer == true) {
         document.getElementsByClassName('box')[0].style.borderColor = color[player - 1]
-        console.log('won')
-        winner=true
-        socket.emit('end-tic-tac-toe', player)
-        document.location.reload(true)
+        
+        
+        end(false)
+        
     }
 }
 function check_match(arr) {
@@ -416,25 +442,85 @@ function player_change() {
     }
     document.getElementById('pl-no').innerHTML = new_player.toString()
     document.getElementsByClassName('other-elem')[0].style.color = color[new_player - 1]
-    document.getElementsByClassName('user')[0].style.color=color[new_player-1]
+    document.getElementsByClassName('user')[0].style.color = color[new_player - 1]
+    document.getElementsByClassName('user')[1].style.color=color[new_player-1]
     document.getElementsByClassName('dash0')[0].style.stroke = color[new_player - 1]
+    document.getElementById('user-text').innerHTML = player_text[new_player - 1]
+    document.getElementById('user').innerHTML=player_order[new_player-1]
 }
-
 const url = window.location.origin + "/me" // change to production url later
 var username = ""
+
+function end(input) {
+    winner = true
+    last_move=true
+    console.log('received')
+    let player = parseInt(document.getElementById('pl-no').innerHTML)
+    let current_user=document.getElementById('user').innerHTML
+    // document.location.reload(true)
+    
+    const leaderboard = window.location.origin + '/score'
+    let score = {
+        score:1
+    }
+    console.log('username', username)
+    console.log('current user',current_user)
+    if (current_user == username && !input) {
+        socket.emit('end-tic-tac-toe', current_user)
+        // console.log('Score Sent')
+        end_result=player
+        // var xhr = new XMLHttpRequest()
+        // xhr.open('POST', leaderboard,true)
+        // xhr.onreadystatechange = function() { //Call a function when the state changes.
+        //     if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+        //         //Request finished. Do processing here.
+        //         console.log('Ok')
+        //     }
+        // }
+        // xhr.send(JSON.stringify(score))
+
+
+
+        // let response = await fetch(leaderboard, {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json;charset=utf-8'
+        //     },
+        //     body: JSON.stringify(score)
+        // })
+        // let result = await response.json();
+        // alert(result.message);
+    }
+    else if (current_user != username && !input) {
+        console.log('This player did not win')
+        end_result=player
+    }
+    else {
+        console.log('Nobody Wins')
+    }
+    
+    
+    
+    
+    
+}
+
 
 async function play() {
     try {
         const res = await fetch(url)
         const user = await res.json()
         username = user.username
-
+    
+        
+        console.log(user)
+        console.log('1st test')
         socket.emit('join-tic-tac-toe', username, (message) => { 
             console.log(message)
             freezeClic = true
             sendClic = false
             document.addEventListener("click", freezeClicFn, true);
-
+            document.getElementById('user').innerHTML=username
             console.log('frozen')
         })
 
@@ -447,6 +533,11 @@ async function play() {
 	    // })
 
         socket.on('start-tic-tac-toe', () => {
+            player_1 = true
+            player_order=[username, '']
+            player_text = ['Your Turn - ', 'Not Your Turn']
+            document.getElementById('user-text').innerHTML = 'Your Turn - '
+            document.getElementById('user').innerHTML=username
             console.log('start')
             freezeClic = false
             sendClic = true
@@ -462,8 +553,11 @@ async function play() {
 
                 var current_player = parseInt(document.getElementById('pl-no').innerHTML)
 
-                if (current_player === opponent)   // replace 1 by opponent user
+                if (current_player === opponent && last_move==false) {
+                    console.log('In the return statement')
                     return
+                }   // replace 1 by opponent user
+                    
 
                 console.log('sending ')
 

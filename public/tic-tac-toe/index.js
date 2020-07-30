@@ -177,7 +177,6 @@ function space(input) {
                 else {
                     document.getElementsByClassName('end')[0].innerHTML ='Player '+end_result+' won this game.'
                 }
-                socket.emit('end-tic-tac-toe', player)
             },500)
         }
     }
@@ -467,17 +466,21 @@ function end(input) {
     console.log('username', username)
     console.log('current user',current_user)
     if (current_user == username && !input) {
-        console.log('Score Sent')
+        socket.emit('end-tic-tac-toe', current_user)
+        // console.log('Score Sent')
         end_result=player
-        var xhr = new XMLHttpRequest()
-        xhr.open('POST', leaderboard,true)
-        xhr.onreadystatechange = function() { //Call a function when the state changes.
-            if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
-                //Request finished. Do processing here.
-                console.log('Ok')
-            }
-        }
-        xhr.send(JSON.stringify(score))
+        // var xhr = new XMLHttpRequest()
+        // xhr.open('POST', leaderboard,true)
+        // xhr.onreadystatechange = function() { //Call a function when the state changes.
+        //     if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+        //         //Request finished. Do processing here.
+        //         console.log('Ok')
+        //     }
+        // }
+        // xhr.send(JSON.stringify(score))
+
+
+
         // let response = await fetch(leaderboard, {
         //     method: 'POST',
         //     headers: {

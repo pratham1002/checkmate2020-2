@@ -432,7 +432,8 @@ async function play() {
 play()
 
 redirect=()=>{
-    window.location.replace('/tic-tac-toe')
+    window.location.href= window.location.origin+'/game'
+    localStorage.removeItem('cr')
 }
 	// const res = await fetch(url).then(async (res) => {
     //     const result = await res.json().then((user) => {

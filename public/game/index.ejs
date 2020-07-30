@@ -9,7 +9,16 @@
     <script src="TemplateData/UnityProgress.js"></script>
     <script src="Build/UnityLoader.js"></script>
     <script>
-      var unityInstance = UnityLoader.instantiate("unityContainer", "Build/Checkmate_13_July_WebGL.json", {onProgress: UnityProgress});
+      var unityInstance = UnityLoader.instantiate("unityContainer", "Build/Checkmate_10_July_WebGL.json", {onProgress: UnityProgress});
+      if(localStorage.getItem('cr')){
+        setTimeout(()=>window.location.href=window.location.origin+'/chain-reaction',20*60*1000)
+      }
+      else if(localStorage.getItem('ttt')){
+        setTimeout(()=>window.location.href=window.location.origin+'/tic-tac-toe',20*60*1000)
+      }
+      else if(localStorage.getItem('mm')){
+        setTimeout(()=>window.location.href=window.location.origin+'/mastermind',20*60*1000)
+      }
     </script>
   </head>
   <body>

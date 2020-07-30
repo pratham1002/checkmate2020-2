@@ -3,6 +3,9 @@ function setCookie(cname, cvalue, exdays) {
     d.setTime(d.getTime() + (exdays*24*60*60*1000));
     var expires = "expires="+ d.toUTCString();
     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+    localStorage.setItem("cr", false);
+    localStorage.setItem("ttt", false);
+    localStorage.setItem("mm", false);
   }
   
   
@@ -26,7 +29,7 @@ function setCookie(cname, cvalue, exdays) {
               if (jwt!==null) {
                   alert("Successfuly registered user");
                   setCookie("jwt", jwt, 1);
-                  window.location.href = window.location.origin + "/tic-tac-toe"
+                  window.location.href = window.location.origin + "/game"
               }else {
                   alert("Invalid data/username/ids")
               }

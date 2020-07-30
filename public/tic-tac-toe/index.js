@@ -323,7 +323,9 @@ function check_big_box() {
 
         socket.emit('end-tic-tac-toe', player)
 
-        document.location.reload(true)
+        localStorage.removeItem('ttt')
+        //document.location.reload(true)
+        document.location.href=window.location.origin+'/game'
     }
 }
 function check_match(arr) {

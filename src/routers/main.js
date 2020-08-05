@@ -63,6 +63,11 @@ router.get("/tic-tac-toe", auth, (req, res) => {
 	})
 })
 
+router.get("/mastermind", auth, async(req, res) => {
+    res.render("mastermind/mastermind")
+})
+
+
 router.get("/me", auth, (req, res) => {
 	res.send({
         "username": req.user.username,

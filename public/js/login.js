@@ -24,7 +24,7 @@ function setCookie(cname, cvalue, exdays) {
               if (jwt!==null) {
                   alert("Successfuly logged in");
                   setCookie("jwt", jwt, 1);
-                  window.location.href = window.location.origin + "/tic-tac-toe"
+                  window.location.href = window.location.origin + "/game"
               } else {
                   alert("Invalid credentials")
               }

@@ -1,18 +1,77 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title></title>
-        <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    </head>
-    <body>
-        <form>
-            <input name="id_1" placeholder="bits-id" required id="id_1" type="text">
-            <input name="username" placeholder="username" required id="username" type="text">
-            <input name="password" placeholder="password" required id="password" type="password">
-            <div id="submit" class="form-group submit-button">
-                <input type="submit" value="Register" class="btn float-right submit_btn">
+
+<head>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@600&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="authetication.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"
+        integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous">
+        </script>
+    <script src="assets/mgGlitch.min.js"></script>
+</head>
+
+<body>
+    <div class="glitch-container">
+        <div class="glitch-img"></div>
+    </div>
+    <div class="container">
+
+        <div class="box">
+            <div class="heading" style="margin-bottom: 6vh;">
+                Register
             </div>
-        </form>
-        <script src="js/register.js"></script>
-    </body>
+            <form>
+                <div class="form">
+                    <div class="input_holder">
+                        <input name="id_1" class="input" placeholder="Bits-ID" required id="id_1" type="text">
+                    </div>
+                    <div class="input_holder">
+                        <input name="username" class="input" placeholder="Username" required id="username" type="text">
+                    </div>
+                    <div class="input_holder">
+                        <input name="password" class="input" placeholder="Password" required id="password"
+                            type="password">
+                    </div>
+                    <div id="submit" class="form-group submit-button " style="margin-top: 5vh;">
+                        <input type="submit" value="Register" class="btn float-right submit_btn button">
+                    </div>
+
+                </div>
+            </form>
+
+        </div>
+    </div>
+    <script src="js/register.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $(".glitch-img").mgGlitch({
+                // set 'true' to stop the plugin
+                destroy: false,
+                // set 'false' to stop glitching
+                glitch: true,
+                // set 'false' to stop scaling
+                scale: true,
+                // set 'false' to stop glitch blending
+                blend: true,
+                // select blend mode type
+                blendModeType: 'hue',
+                // set min time for glitch 1 elem
+                glitch1TimeMin: 400,
+                // set max time for glitch 1 elem
+                glitch1TimeMax: 600,
+                // set min time for glitch 2 elem
+                glitch2TimeMin: 20,
+                // set max time for glitch 2 elem
+                glitch2TimeMax: 200,
+            });
+        });
+    </script>
+
+
+</body>
+
 </html>

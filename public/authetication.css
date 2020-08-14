@@ -1,0 +1,269 @@
+@media screen and (min-width: 1201px) {
+    .box {
+        width: 15vw;
+    }
+
+    .heading {
+        width: 10vw;
+    }
+
+    .form {
+        width: 10vw;
+    }
+
+    .input {
+        width: 10vw;
+    }
+
+    .button {
+        width: 10vw;
+    }
+}
+
+@media screen and (max-width: 1200px) {
+    .box {
+        width: 20vw;
+    }
+
+    .heading {
+        width: 15vw;
+    }
+
+    .form {
+        width: 15vw;
+    }
+
+    .input {
+        width: 15vw;
+    }
+
+    .button {
+        width: 15vw;
+    }
+}
+
+@media screen and (max-width: 950px) {
+    .box {
+        width: 40vw;
+    }
+
+    .heading {
+        width: 35vw;
+    }
+
+    .form {
+        width: 35vw;
+    }
+
+    .input {
+        width: 35vw;
+    }
+
+    .button {
+        width: 35vw;
+    }
+}
+
+@media screen and (max-width: 720px) {
+    .box {
+        width: 50vw;
+    }
+
+    .heading {
+        width: 45vw;
+    }
+
+    .form {
+        width: 45vw;
+    }
+
+    .input {
+        width: 45vw;
+    }
+
+    .button {
+        width: 45vw;
+    }
+}
+
+/* @media screen and (max-width: 500px){
+    .box{
+        width: 50vw;
+    }
+    .heading{
+        width: 45vw;
+    }
+    .form{
+        width: 45vw;
+    }
+    .input{
+        width: 45vw;
+    }
+    .button{
+        width: 45vw;
+    }
+} */
+@media screen and (max-width: 500px) {
+    .box {
+        width: 60vw;
+    }
+
+    .heading {
+        width: 55vw;
+    }
+
+    .form {
+        width: 55vw;
+    }
+
+    .input {
+        width: 55vw;
+    }
+
+    .button {
+        width: 55vw;
+    }
+}
+
+.glitch-img {
+    background-image: url('assets/background.png');
+    background-size: cover;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    background-position: center;
+    opacity: 1;
+}
+
+.glitch-container {
+    overflow: hidden;
+    position: fixed;
+    height: 100vh;
+    padding: 0;
+    width: 100vw;
+    top: 0;
+    left: 0;
+    margin: 0;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    margin: 0;
+    font-family: 'Assistant', sans-serif;
+}
+
+.box {
+    background-color: rgba(255, 255, 255, .15);
+    backdrop-filter: blur(8px);
+    min-height: 40vh;
+    border-radius: 20px;
+    z-index: 100;
+    padding: 2.5vh 2.5vw 5vh 2.5vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+    /* color: transparent; */
+}
+
+.box div {
+    z-index: 100;
+}
+
+.box>div {
+    margin: 20px;
+}
+
+.heading {
+    color: white;
+    font-size: 2em;
+    font-weight: bold;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.form {
+    display: flex;
+    justify-items: center;
+    align-items: center;
+    font-size: 1em;
+    flex-direction: column;
+}
+
+.form>div {
+    margin: 2vh;
+}
+
+.input_holder {
+    width: auto;
+    padding: 0;
+    height: auto;
+    border-radius: 20px;
+}
+
+.input_holder:focus {
+    outline: groove;
+}
+
+.input {
+    background-color: transparent;
+    border: solid 0.4px whitesmoke;
+    color: whitesmoke;
+    border-radius: 20px;
+    padding: 1vh 1vw 1vh 1vw;
+    font-size: 1em;
+    font-weight: 500;
+    text-align: center;
+    font-family: 'Assistant', sans-serif;
+}
+
+.input:focus {
+    outline: none;
+    box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
+    background-color: white;
+    color: black;
+
+}
+
+.input:focus::placeholder {
+    color: black;
+}
+
+::placeholder {
+    color: whitesmoke;
+    text-align: center;
+}
+
+.button {
+    background-color: white;
+    border: solid 1px white;
+    border-radius: 20px;
+    font-size: 1em;
+    font-weight: bold;
+    padding: 1vh 1vw 1vh 1vw;
+    font-family: 'Assistant', sans-serif;
+}
+
+.button:focus {
+    outline: none;
+
+}
+
+.button:hover {
+    background-color: transparent;
+    color: whitesmoke;
+    border-color: whitesmoke;
+    box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.2);
+}

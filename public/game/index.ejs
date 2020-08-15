@@ -10,6 +10,15 @@
     <script src="Build/UnityLoader.js"></script>
     <script>
       var unityInstance = UnityLoader.instantiate("unityContainer", "Build/Checkmate_8_August_WebGL.json", {onProgress: UnityProgress});
+      if(localStorage.getItem('cr')){	
+        setTimeout(()=>window.open(window.location.origin+'/chain-reaction', '_blank'), 20*60*1000)	
+      }	
+      else if(localStorage.getItem('ttt')){	
+        setTimeout(()=>window.open(window.location.origin+'/tic-tac-toe', '_blank'), 20*60*1000)	
+      }	
+      else if(localStorage.getItem('mm')){	
+        setTimeout(()=>window.open(window.location.origin+'/mastermind', '_blank'), 20*60*1000)	
+      }
     </script>
   </head>
   <body>

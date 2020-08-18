@@ -411,6 +411,7 @@ async function play() {
         })
         
         socket.on('winner-score-update',async(winner)=>{
+            document.getElementById('winner').innerHTML=winner+' Wins!'
             if(winner==username){
                await fetch('/score',{
                 method: 'POST',
@@ -432,8 +433,8 @@ async function play() {
 play()
 
 redirect=()=>{
-    window.location.href= window.location.origin+'/game'
     localStorage.removeItem('cr')
+    alert("Please close this tab and return to your maze... ")
 }
 	// const res = await fetch(url).then(async (res) => {
     //     const result = await res.json().then((user) => {

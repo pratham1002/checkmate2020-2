@@ -62,9 +62,11 @@ io.on('connection', (socket) => {
 
     socket.on('freeze-chain-reaction', (valid_move) => {
         try {
-            const user = getUser(socket.id)
-            socket.to(user.room).emit('unfreezeOpponent-chain-reaction')
-            // io.to(socket.id).emit('freezePlayer-chain-reaction')
+            if (valid_move) {
+                const user = getUser(socket.id)
+                socket.to(user.room).emit('unfreezeOpponent-chain-reaction')
+                io.to(socket.id).emit('freezePlayer-chain-reaction')
+            }
         }
         catch (e) {
             console.log(e)

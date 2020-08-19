@@ -601,3 +601,7 @@ async function play() {
 }
 
 play()
+
+window.onbeforeunload =function() {
+    return "You will lose all your game progress. Are you sure, you want to close?"
+  };

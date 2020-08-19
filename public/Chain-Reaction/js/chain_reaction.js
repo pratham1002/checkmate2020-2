@@ -6,6 +6,11 @@ let game_over=[],p1=0,p0=0;
 let grid=[];
 let opponent = { id: 0 };
 let flag = 0;
+
+window.onbeforeunload =function() {
+    return "You will lose all your game progress. Are you sure, you want to close?"
+  };
+
 for(let r=0; r<row; r++)
     grid[r]=[];
 

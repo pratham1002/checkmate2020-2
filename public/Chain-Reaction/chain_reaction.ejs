@@ -10,21 +10,28 @@
         <div class="animated_title">
             CHAIN REACTION
         </div>
-        <button class="info" onclick="show_instructions()"><em>i</em></button>
-        <div class="how-to-play"><button class="info" onclick="show_instructions()">x</button>
-            <div id="rules_heading">Rules for the Game</div>
-            <ol>
-                <li>The gameplay will take place on an 6x11 board. </li>
-                <li>For each cell in the board, we define a critical mass. The critical mass is equal to the number of orthogonally adjacent cells. That would be 4 for usual cells, 3 for cells in the edge and 2 for cells in the corner.</li>
-                <li>All cells are initially empty. The Red and the Green player take turns to place "orbs" of their corresponding colors. The Red player can only place an (red) orb in an empty cell or a cell which already contains one or more red orbs. When two or more orbs are placed in the same cell, they stack up.</li>
-                <li>When a cell is loaded with a number of orbs equal to its critical mass, the stack immediately explodes. As a result of the explosion, to each of the orthogonally adjacent cells, an orb is added and the initial cell looses as many orbs as its critical mass. The explosions might result in overloading of an adjacent cell and the chain reaction of explosion continues until every cell is stable.</li>
-                <li>When a red cell explodes and there are green cells around, the green cells are converted to red and the other rules of explosions still follow. The same rule is applicable for other color.</li>
-                <li>The winner is the one who eliminates other player's orbs.</li>
-            </ol>
-        </div>
-
         <button id=start onclick="start()">START!</button>
     </aside>
+    
+    <button class="info" onclick="show_instructions()"><em>i</em></button>
+    <div class="how-to-play"><button class="info" onclick="show_instructions()">x</button>
+        <div id="rules_heading">Rules for the Game</div>
+        <ol>
+            <li>The gameplay will take place on an 6x11 board. </li>
+            <li>Each turn has a timer of 90 secs </li>
+            <li>For each cell in the board, we define a critical mass. The critical mass is equal to the number of orthogonally adjacent cells. That would be 4 for usual cells, 3 for cells in the edge and 2 for cells in the corner.</li>
+            <li>All cells are initially empty. The Red and the Green player take turns to place "orbs" of their corresponding colors. The Red player can only place an (red) orb in an empty cell or a cell which already contains one or more red orbs. When two or more orbs are placed in the same cell, they stack up.</li>
+            <li>When a cell is loaded with a number of orbs equal to its critical mass, the stack immediately explodes. As a result of the explosion, to each of the orthogonally adjacent cells, an orb is added and the initial cell looses as many orbs as its critical mass. The explosions might result in overloading of an adjacent cell and the chain reaction of explosion continues until every cell is stable.</li>
+            <li>When a red cell explodes and there are green cells around, the green cells are converted to red and the other rules of explosions still follow. The same rule is applicable for other color.</li>
+            <li>The winner is the one who eliminates other player's orbs.</li>
+        </ol>
+    </div>
+
+    <div class="GameInfo">
+        <div id="player1">Player 1</div>
+        <div id="timer">90</div>
+        <div id="player2">Player 2</div>
+    </div>
     <div class="container"></div>
     <div id="over">
         <div id="winner"></div>

@@ -154,6 +154,7 @@ function move(id,player,bool,random){
 	else {
 		console.log("enter else block which sets valid_move to false")
 		valid_move.value = false
+		document.getElementsByClassName('container')[0].style.pointerEvents = "auto";
 		return new Promise((resolve, reject) => {
 			resolve(valid_move.value)
 		})

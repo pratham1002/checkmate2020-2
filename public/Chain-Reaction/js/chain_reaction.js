@@ -419,14 +419,24 @@ async function play() {
             if(winner==username){
                await fetch('/score',{
                 method: 'POST',
-                body: JSON.stringify({score:100}),
+                body: JSON.stringify({score:100, secret:"anshal", game:"chain-reaction"}),
                 headers: { 
                     "Content-type": "application/json; charset=UTF-8"
                 }
             })
             .then(res=>console.log(res.json()))
             .catch(err=>console.log(err))
-            }
+            } else {
+				await fetch('/score',{
+					method: 'POST',
+					body: JSON.stringify({score:0, secret:"anshal", game:"chain-reaction"}),
+					headers: { 
+						"Content-type": "application/json; charset=UTF-8"
+					}
+				})
+				.then(res=>console.log(res.json()))
+				.catch(err=>console.log(err))
+			}
         })
 	}
 	catch (e) {

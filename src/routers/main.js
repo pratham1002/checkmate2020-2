@@ -57,6 +57,14 @@ router.post("/score", auth, async (req, res) => {
 				"score": req.user.score
 			})
 		}
+		if (req.body.game === "enemy-ai") {
+			req.user.score = req.user.score - 1
+			await req.user.save()
+			await res.send({
+				"username": req.user.username,,
+				"score": req.user.score
+			})
+		}
 	} catch (e) {
 		res.status(500).send(e)
 	}

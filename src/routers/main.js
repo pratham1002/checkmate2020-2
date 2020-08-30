@@ -61,7 +61,7 @@ router.post("/score", auth, async (req, res) => {
 			req.user.score = req.user.score - 1
 			await req.user.save()
 			await res.send({
-				"username": req.user.username,,
+				"username": req.user.username,
 				"score": req.user.score
 			})
 		}

@@ -11,6 +11,11 @@
         top: 1vh;
         right: 1vh;
     }
+    .instruction-button{
+        position: fixed;
+        top: 5vh;
+        left: 5vw;
+    }
     .player{
         font-size: 1em;
     }
@@ -27,10 +32,21 @@
         height: 10vh;
         width: 10vh;
     }
+    .box{
+        top: 20vh;
+        left: 30vw;
+    }
     .box,.instructions{
         width: 40vw;
         height: 40vw;
         padding: 1vw;
+    }
+    .instructions{
+        padding: 3vw;
+    }
+    .instructions{
+        min-height: 40vw;
+        overflow: hidden;
     }
     .small-box{
         height: 10vw;
@@ -54,8 +70,12 @@
         margin-bottom: 10vh;
         word-wrap: none;
     }
+    .instruction-button{
+        margin-top: 15vh;
+    }
     .other-elem{
         min-width: 10vw;
+        
         flex-direction: column;
         /* position: fixed;
         top: 15vh;
@@ -64,8 +84,9 @@
     .player{
         font-size: 1em;
         position: fixed;
-        top: 18vh;
+        top: 22vh;
         left: 35vw;
+        width: 25vw;
     }
     .user{
         font-size: 0.8em;
@@ -76,12 +97,16 @@
         width: 4vh;
         margin: 3vh;
         position: fixed;
-        top: 14vh;
+        top: 18vh;
         right: 23vw;
     }
     .dash0{
         height: 4vh;
         width: 4vh;
+    }
+    .box{
+        top: 30vh;
+        left: .53vw;
     }
     .box,.instructions{
         width: 95vw;
@@ -89,6 +114,7 @@
         padding: 1vw;
         margin-top: 7vh;
     }
+    
     .small-box{
         height: 25vw;
         width: 25vw;
@@ -102,7 +128,12 @@
         padding: 0.333333vw;
     }
 }
-
+@media all and (max-width: 1130px){
+    .instructions{
+        overflow-x: hidden;
+        overflow-y: scroll;
+    }
+}
 
 body{
     overflow-x: hidden;
@@ -131,7 +162,7 @@ body{
     justify-content: center;
     font-weight: bolder;
 
-    color: #add3e0;
+    color: #ffffff;
 }
 .other-elem{
     display: flex;
@@ -140,6 +171,13 @@ body{
 
 
 
+}
+.instruction-button{
+    position: fixed;
+    
+    font-size: 1em;
+    color: #add3e0;
+    cursor: pointer;
 }
 .player{
 
@@ -164,6 +202,37 @@ body{
     fill-opacity: 0.5;
 
 
+}
+.box{
+    position: fixed;
+}
+.instructions{
+    
+    display: flex;
+    flex-direction: column;
+}
+.instruction-heading{
+    width: 100%;
+    display: block;
+    text-align: center;
+    font-size: 1.5em;
+    font-weight: bolder;
+    margin-bottom: 3vh;
+    color: #ffffff;
+}
+.close-button{
+    position: relative;
+    text-align: right;
+    right: 0;
+    top: 0;
+    font-size: small;
+    color: #add3e0;
+    cursor: pointer;
+}
+.content{
+    font-size: medium;
+    font-weight: lighter;
+    color: #ffffff
 }
 .end{
     padding: 5vh;

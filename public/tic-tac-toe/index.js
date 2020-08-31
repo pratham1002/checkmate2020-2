@@ -108,6 +108,17 @@ let first_time=true
 let player_1 = false
 let end_result=0
 
+function open_inst(){
+    document.getElementsByClassName('instructions')[0].style.display='flex'
+    document.getElementsByClassName('box')[0].style.display='none'
+    console.log('opened')
+}
+function close_inst(){
+    document.getElementsByClassName('instructions')[0].style.display='none'
+    document.getElementsByClassName('box')[0].style.display=''
+    console.log('closed')
+}
+
 function space(input) {
     var no = (smallRow * 3) + input
     if (first_time && player_1==false) {
@@ -517,10 +528,11 @@ async function play() {
         console.log('1st test')
         socket.emit('join-tic-tac-toe', username, (message) => { 
             console.log(message)
+            close_inst()
             freezeClic = true
             sendClic = false
             document.addEventListener("click", freezeClicFn, true);
-            
+            document.getElementById('user-text').innerHTML = 'Waiting for the other player to join'
             console.log('frozen')
         })
 
@@ -538,6 +550,7 @@ async function play() {
             player_text = ['Your Turn - ', 'Not Your Turn']
             document.getElementById('user-text').innerHTML = 'Your Turn - '
             document.getElementById('user').innerHTML=username
+            
             console.log('start')
             freezeClic = false
             sendClic = true

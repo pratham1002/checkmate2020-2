@@ -494,7 +494,7 @@ function end(input) {
 
         let score = {
             score:100,
-            game:'Tic-Tac-Toe',
+            game:'tic-tac-toe',
             secret:'anshal'
         }
         fetch(leaderboard, {
@@ -513,7 +513,7 @@ function end(input) {
         end_result=player
         let score = {
             score:0,
-            game:'Tic-Tac-Toe',
+            game:'tic-tac-toe',
             secret:'anshal'
         }
         fetch(leaderboard, {

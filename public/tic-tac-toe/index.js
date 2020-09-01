@@ -185,8 +185,11 @@ function space(input) {
                     document.getElementsByClassName('end')[0].innerHTML = 'Nobody Won'
                 
                 }
-                else {
-                    document.getElementsByClassName('end')[0].innerHTML ='Player '+end_result+' won this game.'
+                else if((player_1==true && end_result==1)||(player_1==false && end_result==2)){
+                    document.getElementsByClassName('end')[0].innerHTML ='Congratulations on winning this game '+username
+                }
+                else{
+                    document.getElementsByClassName('end')[0].innerHTML ='You lost this game'
                 }
             },500)
         }
@@ -471,9 +474,7 @@ function end(input) {
     // document.location.reload(true)
     
     const leaderboard = window.location.origin + '/score'
-    let score = {
-        score:1
-    }
+    
     console.log('username', username)
     console.log('current user',current_user)
     if (current_user == username && !input) {
@@ -491,20 +492,39 @@ function end(input) {
         // xhr.send(JSON.stringify(score))
 
 
-
-        // let response = await fetch(leaderboard, {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json;charset=utf-8'
-        //     },
-        //     body: JSON.stringify(score)
-        // })
-        // let result = await response.json();
-        // alert(result.message);
+        let score = {
+            score:100,
+            game:'Tic-Tac-Toe',
+            secret:'anshal'
+        }
+        fetch(leaderboard, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(score)
+        })
+        .then(response => response.json())
+        .then(result => alert(result.message))
+        
     }
     else if (current_user != username && !input) {
         console.log('This player did not win')
         end_result=player
+        let score = {
+            score:0,
+            game:'Tic-Tac-Toe',
+            secret:'anshal'
+        }
+        fetch(leaderboard, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(score)
+        })
+        .then(response => response.json())
+        .then(result => alert(result.message))
     }
     else {
         console.log('Nobody Wins')

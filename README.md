@@ -5,7 +5,7 @@ Hosted on: https://checkmate2020.herokuapp.com
 ## Assigned Responsibilities
  - Login/Register -> Anshal
  - Tic-Tac-Toe -> Anshal / Pratham
- - Chain-Reaction -> Uda
+ - Chain-Reaction -> Uday
 
 ### Endpoints
  - /register

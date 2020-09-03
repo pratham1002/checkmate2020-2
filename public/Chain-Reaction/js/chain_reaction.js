@@ -417,6 +417,7 @@ async function play() {
         socket.on('winner-score-update',async(winner)=>{
             document.getElementById('winner').innerHTML=winner+' Wins!'
             if(winner==username){
+               console.log('score (100) updated for ' + winner)
                await fetch('/score',{
                 method: 'POST',
                 body: JSON.stringify({score:100, secret:"anshal", game:"chain-reaction"}),
@@ -427,6 +428,7 @@ async function play() {
             .then(res=>console.log(res.json()))
             .catch(err=>console.log(err))
             } else {
+				console.log('score (0) updated for loser')
 				await fetch('/score',{
 					method: 'POST',
 					body: JSON.stringify({score:0, secret:"anshal", game:"chain-reaction"}),
@@ -437,7 +439,16 @@ async function play() {
 				.then(res=>console.log(res.json()))
 				.catch(err=>console.log(err))
 			}
-        })
+		})
+
+		socket.on('opponent-leaves', (user) => {
+			document.getElementsByClassName('container')[0].style.zIndex="0";
+            cssMultiStyles('over',{'visibility':"visible",'z-index':"9999",'transform':'translateY(-100vh)',  'transition': 'transform 1s'})
+			if (flag == 0) {
+				flag += 1
+				socket.emit('opponent-leaves-win', user.username)
+			}
+		})
 	}
 	catch (e) {
 		console.log("error")

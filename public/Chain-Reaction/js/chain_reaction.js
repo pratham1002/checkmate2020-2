@@ -6,6 +6,7 @@ let game_over=[],p1=0,p0=0;
 let grid=[];
 let opponent = { id: 0 };
 let flag = 0;
+let selfTimer,selfTimeLeft=90,opponentTimer,opponentTimeLeft=90,timerInterval,gameComplete=false
 
 window.onbeforeunload =function() {
     return "You will lose all your game progress. Are you sure, you want to close?"
@@ -61,11 +62,20 @@ start_function = () =>	{
             // check valid move here then 
             // 1. freeze the player
             // 2. send the click
-                document.getElementsByClassName('container')[0].style.pointerEvents = "none";
-                socket.emit('click-chain-reaction', div.id, count_moves%total_players, () => {
-					console.log("move")
-					socket.emit('freeze-chain-reaction', valid_move.value)
-                })
+                if (valid_move.value) {
+                    document.getElementsByClassName('container')[0].style.pointerEvents = "none";
+                    socket.emit('click-chain-reaction', div.id, count_moves%total_players, () => {
+						console.log("move")
+                        socket.emit('freeze-chain-reaction', valid_move.value)
+                        if(!gameComplete){
+                            clearTimeout(selfTimer)
+                            selfTimeLeft=90
+                            document.getElementById("timer").innerText=selfTimeLeft
+                            clearTimeout(timerInterval)
+                            opponentTimer=setTimeout(()=>{gameOver(count_moves%2?'player0':'player1');alert("Opponent's time up! You win!")},92*1000)
+                        }
+                    })
+                }
             })
             document.getElementsByClassName('container')[0].appendChild(div);
             cssMultiStyles('r' + row_entry +'c' + col_entry,{'grid-column': col_entry+1 , 'grid-row': row_entry+1}) 
@@ -83,14 +93,25 @@ function start(){
 		alert("Please play the game in Landscape View.")
 	// screen.orientation.lock('landscape');
 
+    document.getElementById('start').style.pointerEvents = "none";
+    document.getElementById('pairing').removeAttribute('hidden');
 	let is_paired = false
-	socket.emit('pair-chain-reaction', async(bool, id) => {
-		opponent.id = id
+	socket.emit('pair-chain-reaction', async(bool, id, myName, opponentName) => {
+        
+        document.getElementById("player1").innerText=username.toUpperCase()
+        // myName and OpponentName may be jumbled, thus the check
+        document.getElementById("player2").innerText=myName==username?opponentName.toUpperCase():myName.toUpperCase()
+
+        opponent.id = id
 		is_paired = bool
 		console.log("Paired ", is_paired)
 		if (is_paired) {
-			start_function()
-		}
+            start_function()
+            if(!gameComplete){
+                selfTimer=setTimeout(()=>{gameOver(count_moves%2?'player0':'player1');alert('Time up! You lose!')},92*1000)
+                timerInterval=setInterval(()=>{document.getElementById("timer").innerText=selfTimeLeft;selfTimeLeft--},1000);
+            }
+        }
 		else {
 			console.log("Waiting to pair")
 		}
@@ -335,24 +356,31 @@ function check(count_moves,player){
         }
     if(count_moves>total_players && (p1 == 0 || p0 == 0))
         {
-            document.getElementsByClassName('container')[0].style.zIndex="0";
-            cssMultiStyles('over',{'visibility':"visible",'z-index':"9999",'transform':'translateY(-100vh)',  'transition': 'transform 1s'})
-            winner=player.match(/\d+/g);
-            console.log(winner)
-            if (winner[0] == '0' && flag == 0) {
-                flag += 1
-                socket.emit('winner-chain-reaction', opponent.id, false)
-            }
-            else if (winner[0] == '1' && flag == 0) {
-                flag += 1
-                socket.emit('winner-chain-reaction', opponent.id, true)
-            }
-            
-            document.getElementById('winner').innerHTML='Player '+(+winner[0]+1)+' Wins!'
+            gameOver(player)
         }
     p0=0;p1=0;game_over=[];
 }
 
+function gameOver(player){
+    document.getElementsByClassName('container')[0].style.zIndex="0";
+    cssMultiStyles('over',{'visibility':"visible",'z-index':"9999",'transform':'translateY(-100vh)',  'transition': 'transform 1s'})
+    winner=player.match(/\d+/g);
+    console.log(winner)
+    console.log("WINNER PLAYER INDEX IS",winner)
+    if (winner[0] == '0' && flag == 0) {
+        flag += 1
+        socket.emit('winner-chain-reaction', opponent.id, false)
+    }
+    else if (winner[0] == '1' && flag == 0) {
+        flag += 1
+        socket.emit('winner-chain-reaction', opponent.id, true)
+    }
+    gameComplete=true
+    clearTimeout(selfTimer)
+    clearTimeout(opponentTimer)
+    clearInterval(timerInterval)
+    p0=0;p1=0;game_over=[];
+}
 
 function restart(){
 	for(let row_entry=0; row_entry<row; row_entry++)
@@ -389,10 +417,16 @@ async function play() {
 			console.log("Room Joined")
 		})
 
-		socket.on('start-chain-reaction', (opponent_id) => {
+        socket.on('start-chain-reaction', (opponent_id, myName, opponentName) => {
+            
+            document.getElementById("player1").innerText=username.toUpperCase()
+            // myName and OpponentName may be jumbled, thus the check
+            document.getElementById("player2").innerText=myName.toUpperCase()==username.toUpperCase()?opponentName.toUpperCase():myName.toUpperCase()
+
 			opponent.id = opponent_id
 			console.log(opponent.id)
 			start_function()
+            opponentTimer=setTimeout(()=>{gameOver(count_moves%2?'player0':'player1');alert("Opponent's time up! You win!")},92*1000)
 		})
 
 		socket.on('move-chain-reaction', (grid, player) => {
@@ -405,9 +439,14 @@ async function play() {
 		})
 
 		socket.on('unfreezeOpponent-chain-reaction', () => {
-			console.log("unfreeze, make your move")
-			document.getElementsByClassName('container')[0].style.pointerEvents = "auto";
-		})
+            console.log("unfreeze, make your move")
+            document.getElementsByClassName('container')[0].style.pointerEvents = "auto";
+            if(!gameComplete){
+                clearTimeout(opponentTimer)
+                selfTimer=setTimeout(()=>{gameOver(count_moves%2?'player0':'player1');alert('Time up! You lose!')},92*1000)
+                timerInterval=setInterval(()=>{document.getElementById("timer").innerText=selfTimeLeft;selfTimeLeft--},1000);
+            }
+        })
 
 		socket.on('freezePlayer-chain-reaction', () => {
 			console.log("freeze, waiting for opponent's move")
@@ -415,8 +454,9 @@ async function play() {
         })
         
         socket.on('winner-score-update',async(winner)=>{
-            document.getElementById('winner').innerHTML=winner+' Wins!'
-            if(winner==username){
+
+            document.getElementById('winner').innerHTML=winner.toUpperCase()+' Wins!'
+            if(winner.toLowerCase()==username.toLowerCase()){
                await fetch('/score',{
                 method: 'POST',
                 body: JSON.stringify({score:100, secret:"anshal", game:"chain-reaction"}),

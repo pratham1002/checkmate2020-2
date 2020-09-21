@@ -454,19 +454,29 @@ async function play() {
         })
         
         socket.on('winner-score-update',async(winner)=>{
+
             document.getElementById('winner').innerHTML=winner.toUpperCase()+' Wins!'
             if(winner.toLowerCase()==username.toLowerCase()){
-
-                await fetch('/score',{
-                    method: 'POST',
-                    body: JSON.stringify({score:100}),
-                    headers: { 
-                        "Content-type": "application/json; charset=UTF-8"
-                    }
-                })
-                .then(res=>console.log(res.json()))
-                .catch(err=>console.log(err))
-            }
+               await fetch('/score',{
+                method: 'POST',
+                body: JSON.stringify({score:100, secret:"anshal", game:"chain-reaction"}),
+                headers: { 
+                    "Content-type": "application/json; charset=UTF-8"
+                }
+            })
+            .then(res=>console.log(res.json()))
+            .catch(err=>console.log(err))
+            } else {
+				await fetch('/score',{
+					method: 'POST',
+					body: JSON.stringify({score:0, secret:"anshal", game:"chain-reaction"}),
+					headers: { 
+						"Content-type": "application/json; charset=UTF-8"
+					}
+				})
+				.then(res=>console.log(res.json()))
+				.catch(err=>console.log(err))
+			}
         })
 	}
 	catch (e) {

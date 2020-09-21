@@ -11,7 +11,7 @@
         width: 10vw;
     }
 
-    .input {
+    .input,.message {
         width: 10vw;
     }
 
@@ -33,7 +33,7 @@
         width: 15vw;
     }
 
-    .input {
+    .input,.message {
         width: 15vw;
     }
 
@@ -55,7 +55,7 @@
         width: 35vw;
     }
 
-    .input {
+    .input,.message {
         width: 35vw;
     }
 
@@ -77,7 +77,7 @@
         width: 45vw;
     }
 
-    .input {
+    .input,.message {
         width: 45vw;
     }
 
@@ -96,7 +96,7 @@
     .form{
         width: 45vw;
     }
-    .input{
+    .input,.message{
         width: 45vw;
     }
     .button{
@@ -116,7 +116,7 @@
         width: 55vw;
     }
 
-    .input {
+    .input,.message {
         width: 55vw;
     }
 
@@ -173,6 +173,7 @@
     justify-content: flex-start;
     align-items: center;
     box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+    border: 2px solid transparent;
     /* color: transparent; */
 }
 
@@ -217,7 +218,7 @@
     outline: groove;
 }
 
-.input {
+.input,.message {
     background-color: transparent;
     border: solid 0.4px whitesmoke;
     color: whitesmoke;
@@ -266,4 +267,11 @@
     color: whitesmoke;
     border-color: whitesmoke;
     box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.2);
+}
+.message{
+    color: whitesmoke;
+    font-weight: 900;
+    background: rgba(211, 0, 0, 0.836);
+    border-color: black;
+    display: none;
 }

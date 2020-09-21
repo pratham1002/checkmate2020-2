@@ -93,6 +93,8 @@ function start(){
 		alert("Please play the game in Landscape View.")
 	// screen.orientation.lock('landscape');
 
+    document.getElementById('start').style.pointerEvents = "none";
+    document.getElementById('pairing').removeAttribute('hidden');
 	let is_paired = false
 	socket.emit('pair-chain-reaction', async(bool, id, myName, opponentName) => {
         

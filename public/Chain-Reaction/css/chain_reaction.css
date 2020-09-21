@@ -111,8 +111,8 @@ body{
 }
 
 .container>div>div{
-  height:20px;
-  width:20px;
+  height:2.5vh;
+  width:2.5vh;
   left: 4vh;
   top: 6vh;
   margin-top: -10px;
@@ -191,6 +191,14 @@ body{
   outline: none;
 }
 
+#pairing{
+    position: absolute;
+    top:55vh;
+    text-align: center;
+    width: 100%;
+    color: white;
+}
+
 button:active{
   transform: scale(1.1);
 }
@@ -228,4 +236,11 @@ button:active{
     height: 13vh;
     width: 13vh;
   }
+}
+
+@media screen and (max-width:900px){
+    .container>div>div{
+        top:4vh;
+        left: 2.5vh;
+    }
 }

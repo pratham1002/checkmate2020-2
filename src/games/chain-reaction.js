@@ -90,8 +90,32 @@ io.on('connection', (socket) => {
         }
     })
 
+    socket.on('opponent-leaves-win', (username) => {
+        socket.emit('winner-score-update', username)
+    })
+
     socket.on('disconnect', () => {
-        const user = removeUser(socket.id)
+        // socket id of the removed user
+        // both users are still in paired users array
+        const user = getUser(socket.id)
+        try {
+            const oldRoom = user.room
+            const opponent = getPairedUsers().find((user) => {
+                return user.room === oldRoom && user.id != socket.id
+            })
+            socket.to(user.room).emit('opponent-leaves', opponent)
+            
+            const pairedUsers = getPairedUsers().filter((user) => user.room === oldRoom)
+            pairedUsers.forEach((user) => {
+                // first remove from pairedUsers, then from users array
+                removeUser(user.id)
+                removeUser(user.id)
+            })
+        }
+        catch (e) {
+            removeUser(socket.id)
+            console.log("the user wasn't paired")
+        }
         console.log('Paired', getPairedUsers())
         console.log('Unpaired', getUnpairedUsers())
     })

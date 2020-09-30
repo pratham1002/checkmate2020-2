@@ -56,6 +56,6 @@ As the name suggests, its Tetris, but with wind, so if your block is moving in a
 
 ### Mirror Game
 
-![Mirror Game](/Images/Mirror-Game.png)
+![Mirror Game](/Images/Mirror-game.png)
 
 There are 5 mirrors, 15 sliders and two points. You have to reflect the light off every mirror exactly once and make the ray reach from the start point to the end point.

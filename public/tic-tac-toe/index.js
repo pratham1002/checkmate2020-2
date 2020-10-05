@@ -163,7 +163,7 @@ function space(input) {
         Arr_box[bigRow][smallBox][smallRow][spaces] = player + 1
         check_small_box()
         clearInterval(myvar)
-        console.log('Inside space function')
+        //console.log('Inside space function')
         if (winner == false) {
             decolorize()
             checking_unfilled()
@@ -268,6 +268,7 @@ function random() {
         console.log('Nobody Wins')
         document.getElementsByClassName('box')[0].style.backgroundColor = 'black'
         document.getElementsByClassName('box')[0].style.borderColor = 'black'
+        end(true)
     }
 
     for (var k = 0; k < 3; k++) {
@@ -465,16 +466,94 @@ function player_change() {
 const url = window.location.origin + "/me" // change to production url later
 var username = ""
 const leaderboard = window.location.origin + '/score'
+const secret_key = 'anshal'
+var timer_self_var, timer_other_player_var, alert_user, timer_no_one_joined_var
+let first_move = true
+
+function timer_self() {
+    alert_user = setTimeout(function () {
+        alert('Make a move within the next minute, or the game will be forfeited.')
+    }, 60000)
+    timer_self_var = setTimeout(function () {
+        document.getElementsByClassName('box')[0].style.display = 'none'
+        document.getElementsByClassName('end')[0].style.display = 'flex'
+        document.getElementsByClassName('end')[0].innerHTML = 'You lost this game since you haven\'t made a move for 2 minutes.'
+        let score = {
+            score: 0,
+            game: 'tic-tac-toe',
+            secret: secret_key
+        }
+        fetch(leaderboard, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(score)
+        })
+            .then(response => response.json())
+            .then(result => alert(result.message))
+    }, 120000)
+}
+
+function timer_other_player() {
+    timer_other_player_var = setTimeout(function () {
+        document.getElementsByClassName('box')[0].style.display = 'none'
+        document.getElementsByClassName('end')[0].style.display = 'flex'
+        document.getElementsByClassName('end')[0].innerHTML = 'You won this game since your opponent haven\'t made a move for 2 minutes.'
+        let score = {
+            score: 100,
+            game: 'tic-tac-toe',
+            secret: secret_key
+        }
+        fetch(leaderboard, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(score)
+        })
+            .then(response => response.json())
+            .then(result => alert(result.message))
+    }, 120000)
+}
+
+function timer_no_one_joined() {
+    timer_no_one_joined_var = setTimeout(function () {
+        document.getElementsByClassName('box')[0].style.display = 'none'
+        document.getElementsByClassName('end')[0].style.display = 'flex'
+        document.getElementsByClassName('end')[0].innerHTML = 'You won this game since no one joined.'
+        let score = {
+            score: 100,
+            game: 'tic-tac-toe',
+            secret: secret_key
+        }
+        fetch(leaderboard, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(score)
+        })
+            .then(response => response.json())
+            .then(result => alert(result.message))
+    }, 240000)
+}
 
 function end(input) {
     winner = true
     last_move = true
     console.log('received')
+
     let player = parseInt(document.getElementById('pl-no').innerHTML)
     let current_user = document.getElementById('user').innerHTML
     // document.location.reload(true)
+    clearTimeout(timer_other_player_var)
+    console.log('Cleared Other Player Timer')
+    clearTimeout(alert_user)
+    console.log('Cleared alert Timer')
+    clearTimeout(timer_self_var)
+    console.log('Cleared Self Timer')
 
-    
 
     console.log('username', username)
     console.log('current user', current_user)
@@ -506,12 +585,14 @@ function end(input) {
             body: JSON.stringify(score)
         })
             .then(response => response.json())
-            .then(result => alert(result.message))
+            .then(result => console.log(result.message))
 
     }
     else if (current_user != username && !input) {
         console.log('This player did not win')
         end_result = player
+
+
         let score = {
             score: 0,
             game: 'tic-tac-toe',
@@ -525,64 +606,13 @@ function end(input) {
             body: JSON.stringify(score)
         })
             .then(response => response.json())
-            .then(result => alert(result.message))
+            .then(result => console.log(result.message))
     }
     else {
         console.log('Nobody Wins')
     }
-
-
-
-
-
-}
-var timer_self_var, timer_other_player_var, alert_user
-function timer_self() {
-    alert_user=setTimeout(function(){
-        alert('Make a move within the next minute, or the game will be forfeited.')
-    },60000)
-    timer_self_var = setTimeout(function () {
-        document.getElementsByClassName('box')[0].style.display = 'none'
-        document.getElementsByClassName('end')[0].style.display = 'flex'
-        document.getElementsByClassName('end')[0].innerHTML='You lost this game since you haven\'t made a move for 2 minutes.'
-        let score = {
-            score: 0,
-            game: 'tic-tac-toe',
-            secret: 'anshal'
-        }
-        fetch(leaderboard, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json;charset=utf-8'
-            },
-            body: JSON.stringify(score)
-        })
-            .then(response => response.json())
-            .then(result => alert(result.message))
-    }, 120000)
 }
 
-function timer_other_player() {
-    timer_other_player_var = setTimeout(function () {
-        document.getElementsByClassName('box')[0].style.display = 'none'
-        document.getElementsByClassName('end')[0].style.display = 'flex'
-        document.getElementsByClassName('end')[0].innerHTML='You won this game since your opponent haven\'t made a move for 2 minutes.'
-        let score = {
-            score: 100,
-            game: 'tic-tac-toe',
-            secret: 'anshal'
-        }
-        fetch(leaderboard, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json;charset=utf-8'
-            },
-            body: JSON.stringify(score)
-        })
-            .then(response => response.json())
-            .then(result => alert(result.message))
-    }, 120000)
-}
 
 async function play() {
     try {
@@ -601,6 +631,8 @@ async function play() {
             document.addEventListener("click", freezeClicFn, true);
             document.getElementById('user-text').innerHTML = 'Waiting for the other player to join'
             console.log('frozen')
+            timer_no_one_joined()
+            console.log('No one Joined Timer')
         })
 
         socket.emit('pair-tic-tac-toe', username) // , (bool) => {
@@ -618,6 +650,10 @@ async function play() {
             document.getElementById('user-text').innerHTML = 'Your Turn - '
             document.getElementById('user').innerHTML = username
 
+            timer_self()
+            console.log('Self Timer')
+            clearTimeout(timer_no_one_joined_var)
+            console.log('Cleared No one Joined Timer')
             console.log('start')
             freezeClic = false
             sendClic = true
@@ -640,9 +676,18 @@ async function play() {
 
 
                 console.log('sending ')
-                timer_other_player()
-                clearTimeout(alert_user)
-                clearTimeout(timer_self_var)
+                first_move = false
+                if (last_move == true) {
+                    console.log('Game Over')
+                }
+                else {
+                    timer_other_player()
+                    console.log('Other Player Timer')
+                    clearTimeout(alert_user)
+                    console.log('Cleared Alert Timer')
+                    clearTimeout(timer_self_var)
+                    console.log('Cleared Self Timer')
+                }
                 console.log(e.target.id);
                 socket.emit('play-tic-tac-toe', current_player, username, e.target.id, (error) => {
                     if (error) {
@@ -666,8 +711,26 @@ async function play() {
             sendClic = false
             freezeClic = false
             console.log('unfrozen')
-            timer_self()
-            clearTimeout(timer_other_player_var)
+
+            if (first_move == true) {
+                clearTimeout(timer_no_one_joined_var)
+                console.log('Cleared No one Joined Timer')
+                timer_self()
+                console.log('Self Timer')
+                first_move = false
+                console.log('first move= ', first_move)
+            }
+            else if (last_move == true) {
+                console.log('Game Over')
+            }
+            else {
+
+                timer_self()
+                console.log('Self Timer')
+                clearTimeout(timer_other_player_var)
+                console.log('Cleared Other Player timer')
+            }
+
             // document.removeEventListener('click', DisableClickOnPage.handler, true)
         })
 

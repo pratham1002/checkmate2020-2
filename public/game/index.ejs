@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en-us">
   <head>
+      
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Unity WebGL Player | Checkmate Maze Textures</title>
@@ -8,20 +9,90 @@
     <link rel="stylesheet" href="TemplateData/style.css">
     <script src="TemplateData/UnityProgress.js"></script>
     <script src="Build/UnityLoader.js"></script>
+    <style>
+      body{
+        margin: 0;
+      } 
+      #modal{
+        background-color: rgba(0, 0, 0, 0.4);
+        z-index: 9999;
+        text-align: center;
+        height: 100vh;
+        width: 100vw;
+        position: fixed;
+        padding: 25vh 0;
+      }
+      #modalContent{
+        margin: auto;
+        background-color: whitesmoke;
+        width: 50vw;
+        padding: 20vh 20vw;
+      }
+      #confirm{
+        padding: 1vw;
+        cursor: pointer;
+      }
+
+    </style>
     <script>
-      var unityInstance = UnityLoader.instantiate("unityContainer", "Build/Checkmate_8_August_WebGL.json", {onProgress: UnityProgress});
+      window.onbeforeunload =function() {
+        return "You will lose all your game progress. Are you sure, you want to close?"
+      };
+
+      showModal=()=>{
+        try { 
+          document.exitFullscreen()            
+        } catch (err) {}
+        document.getElementById("modal").removeAttribute("hidden")
+      }
+      hideModal=()=>{
+        document.getElementById("modal").setAttribute("hidden","hidden")
+      }
+      openTab=(miniGame,gameTime,cookieItem)=>{
+        miniGameWindow=window.open(window.location.origin+'/'+miniGame,'_blank');
+        hideModal()
+        setTimeout(()=>{
+          localStorage.removeItem(cookieItem)
+          miniGameWindow.alert("Time up!")
+          miniGameWindow.close()
+        }, 10*60*1000)
+      }
+      var unityInstance = UnityLoader.instantiate("unityContainer", "Build/Checkmate_26_September.json", {onProgress: UnityProgress});
+      var miniGame, miniGameWindow, gameTime, cookieItem
+
       if(localStorage.getItem('cr')){	
-        setTimeout(()=>window.open(window.location.origin+'/chain-reaction', '_blank'), 20*60*1000)	
+        setTimeout(()=>{
+          showModal()
+          miniGame="chain-reaction"
+          gameTime=10*60*1000
+          cookieItem='cr'
+        }, 25*60*1000)	
       }	
-      else if(localStorage.getItem('ttt')){	
-        setTimeout(()=>window.open(window.location.origin+'/tic-tac-toe', '_blank'), 20*60*1000)	
+      if(localStorage.getItem('ttt')){	
+        setTimeout(()=>{
+          showModal()
+          miniGame="tic-tac-toe"
+          gameTime=10*60*1000
+          cookieItem='ttt'
+        }, 50*60*1000)
       }	
-      else if(localStorage.getItem('mm')){	
-        setTimeout(()=>window.open(window.location.origin+'/mastermind', '_blank'), 20*60*1000)	
+      if(localStorage.getItem('mm')){	
+        setTimeout(()=>{
+          showModal()
+          miniGame="mastermind"
+          gameTime=8*60*1000
+          cookieItem='mm'
+        }, 75*60*1000)	
       }
     </script>
   </head>
   <body>
+    <div id="modal" hidden>
+      <div id="modalContent">
+          <div>Please allow us to open a new tab to continue playing</div>
+          <button id="confirm" onclick="openTab(miniGame,gameTime,cookieItem)">Allow</button>
+      </div>
+    </div>
     <div class="webgl-content">
       <div id="unityContainer" style="width: 960px; height: 600px"></div>
       <div class="footer">

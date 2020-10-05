@@ -19,14 +19,52 @@ router.get('/instructions', (req, res)=>{
 	res.send("Will render instructions page here....")
 })
 
-router.post("/score", auth, (req, res) => {
+secret = {
+	"tic-tac-toe": "anshal",
+	"master-mind": "anshal",
+	"chain-reaction": "anshal",
+	"mask-room": "anshal",
+	"bounce-room": "anshal",
+	"mirror-game": "anshal",
+	"tetris": "anshal",
+	"path-game": "anshal",
+	"checkers": "anshal",
+	"puzzle1": "anshal",
+	"puzzle2": "anshal",
+	"puzzle3": "anshal",
+	"puzzle4": "anshal",
+	"puzzle5": "anshal",
+	"puzzle6": "anshal",
+	"puzzle7": "anshal",
+	"puzzle8": "anshal",
+	"puzzle9": "anshal",
+	"puzzle10": "anshal",
+	"puzzle11": "anshal",
+	"puzzle12": "anshal",
+	"puzzle13": "anshal",
+}
+
+router.post("/score", auth, async (req, res) => {
 	try {
-		req.user.score = req.user.score + parseInt(req.body.score)
-		req.user.save()
-		res.send({
-			"username": req.user.username,
-			"score": req.user.score
-		})
+		if (!req.user.games[req.body.game] && secret[req.body.game] === req.body.secret) {
+			let status = {...req.user.games}
+			status[req.body.game] = true
+			req.user.games = status
+			req.user.score = req.user.score + parseInt(req.body.score)
+			await req.user.save()
+			await res.send({
+				"username": req.user.username,
+				"score": req.user.score
+			})
+		}
+		if (req.body.game === "enemy-ai") {
+			req.user.score = req.user.score - 1
+			await req.user.save()
+			await res.send({
+				"username": req.user.username,
+				"score": req.user.score
+			})
+		}
 	} catch (e) {
 		res.status(500).send(e)
 	}
@@ -57,7 +95,7 @@ router.get('/leaderboard', auth, async (req, res) => {
 })
 
 router.get("/tic-tac-toe", auth, (req, res) => {
-	// console.log(req.user)
+	//console.log(req.user)
 	res.render("tic-tac-toe/index", {
 		"user": req.user
 	})

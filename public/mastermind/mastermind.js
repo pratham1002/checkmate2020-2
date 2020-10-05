@@ -234,3 +234,8 @@ for(let i = 9; i >= 0; i-- ) {
 
 
 });
+
+window.onbeforeunload =function() {
+    return "You will lose all your game progress. Are you sure, you want to close?"
+  };
+

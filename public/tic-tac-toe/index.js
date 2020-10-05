@@ -67,9 +67,9 @@ let Arr_box = [
 ]
 var color = ['#66FCF1', '#FFFFFF']
 var player_text = []
-var player_order=[]
-var dark_blue='#17252A' //rgb(23,37,42)
-var light_blue='#2c4047' //rgb(44,64,71)
+var player_order = []
+var dark_blue = '#17252A' //rgb(23,37,42)
+var light_blue = '#2c4047' //rgb(44,64,71)
 let colored_boxes = []
 let coloured_bigRows = []
 
@@ -102,24 +102,35 @@ function space_calc(sp) {
     return no
 }
 let moved = true
-let winner=false
+let winner = false
 let last_move = false
-let first_time=true
+let first_time = true
 let player_1 = false
-let end_result=0
+let end_result = 0
+
+function open_inst() {
+    document.getElementsByClassName('instructions')[0].style.display = 'flex'
+    document.getElementsByClassName('box')[0].style.display = 'none'
+    console.log('opened')
+}
+function close_inst() {
+    document.getElementsByClassName('instructions')[0].style.display = 'none'
+    document.getElementsByClassName('box')[0].style.display = ''
+    console.log('closed')
+}
 
 function space(input) {
     var no = (smallRow * 3) + input
-    if (first_time && player_1==false) {
+    if (first_time && player_1 == false) {
         player_order = ['', username]
-        player_text=['Not Your Turn', 'Your Turn - ']
+        player_text = ['Not Your Turn', 'Your Turn - ']
         document.getElementById('user-text').innerHTML = 'Not Your Turn'
-        first_time=false
+        first_time = false
     }
 
     spaces = input
     if (Arr_box[bigRow][smallBox] == 1 || Arr_box[bigRow][smallBox] == 2) {
-        sendClic=false
+        sendClic = false
         alert('Player ' + Arr_box[bigRow][smallBox] + ' have won this. Choose Another Box')
     }
     var color = document.getElementsByClassName('small-box')[(bigRow * 3) + smallBox].style.backgroundColor
@@ -140,7 +151,7 @@ function space(input) {
     if (condition) {
         let coord = space_calc(input)
         id_no = `${bigRow}${smallBox}${smallRow}${input}`
-    
+
         //console.log(coord)
         moved = false
         let player = parseInt(document.getElementById('pl-no').innerHTML) - 1
@@ -162,31 +173,34 @@ function space(input) {
 
         }
 
-        sendClic = true    
+        sendClic = true
         if (winner) {
             player_change()
-            
+
             setTimeout(function () {
                 let player = parseInt(document.getElementById('pl-no').innerHTML)
                 document.getElementsByClassName('box')[0].style.display = 'none'
                 document.getElementsByClassName('end')[0].style.display = 'flex'
                 if (end_result == 0) {
                     document.getElementsByClassName('end')[0].innerHTML = 'Nobody Won'
-                
+
+                }
+                else if ((player_1 == true && end_result == 1) || (player_1 == false && end_result == 2)) {
+                    document.getElementsByClassName('end')[0].innerHTML = 'Congratulations on winning this game ' + username
                 }
                 else {
-                    document.getElementsByClassName('end')[0].innerHTML ='Player '+end_result+' won this game.'
+                    document.getElementsByClassName('end')[0].innerHTML = 'You lost this game'
                 }
-            },500)
+            }, 500)
         }
     }
     else if (color != 'rgb(44, 64, 71)') {
-        sendClic=false
+        sendClic = false
         alert('You need to choose a box that is highlighted')
         console.log(id_no)
     }
     else {
-        sendClic=false
+        sendClic = false
         alert('Choose another space')
     }
 }
@@ -210,24 +224,24 @@ function timer() {
             //console.log('comp')
             random()
         }
-    
+
     }, 10)
-    
+
 
 }
 
 function checking_unfilled() {
     var Arr = Arr_box[bigRow][smallBox]
-    var box_no=bigRow*3+smallBox
+    var box_no = bigRow * 3 + smallBox
     // console.log(Arr)
-    found=false
+    found = false
     if (Arr != 1 && Arr != 2) {
-        for(var i=0;i<3;i++){
-            for(var j=0;j<3;j++){
-                var no=(i*3)+j
-                if(Arr[i][j]==''){
+        for (var i = 0; i < 3; i++) {
+            for (var j = 0; j < 3; j++) {
+                var no = (i * 3) + j
+                if (Arr[i][j] == '') {
                     found = true
-                
+
                     break
                 }
             }
@@ -235,48 +249,48 @@ function checking_unfilled() {
         if (found == false) {
             console.log('black')
 
-            document.getElementsByClassName('small-box')[box_no].style.backgroundColor='#000000'
+            document.getElementsByClassName('small-box')[box_no].style.backgroundColor = '#000000'
             document.getElementsByClassName('small-box')[box_no].style.borderColor = '#000000'
-            
+
         }
     }
-    
-    
+
+
 }
 
 
-function random(){
-    let s_row=[],s_box=[]
-    var i=Math.floor(Math.random()*colored_boxes.length)
-    var row=coloured_bigRows[i]
+function random() {
+    let s_row = [], s_box = []
+    var i = Math.floor(Math.random() * colored_boxes.length)
+    var row = coloured_bigRows[i]
     var box = colored_boxes[i]
-    if (colored_boxes.length==0) {
+    if (colored_boxes.length == 0) {
         console.log('Nobody Wins')
         document.getElementsByClassName('box')[0].style.backgroundColor = 'black'
         document.getElementsByClassName('box')[0].style.borderColor = 'black'
     }
-        
-    for(var k=0;k<3;k++){
-        for (var l = 0; l < 3; l++){
-            
-            let val=Arr_box[row][box][k][l]
-            if(val==''){
+
+    for (var k = 0; k < 3; k++) {
+        for (var l = 0; l < 3; l++) {
+
+            let val = Arr_box[row][box][k][l]
+            if (val == '') {
                 s_row.push(k)
                 s_box.push(l)
             }
         }
     }
-    var j=Math.floor(Math.random()*s_box.length)
-    bigRow=row
-    smallBox=box
+    var j = Math.floor(Math.random() * s_box.length)
+    bigRow = row
+    smallBox = box
     smallRow = s_row[j]
-    if (s_box[j]== undefined) {
+    if (s_box[j] == undefined) {
         console.log(s_box)
         console.log(s_row)
         console.log(colored_boxes)
         console.log(coloured_bigRows)
     }
-        
+
     else {
         space(s_box[j])
     }
@@ -296,14 +310,14 @@ function decolorize() {
                     }
                 }
             }
-        
+
         }
     }
 }
-function box_color(){
-    var no=(bigRow*27)+(smallBox*9)
-    var old_box=(bigRow*3)+smallBox
-    var new_box=(smallRow*3)+spaces
+function box_color() {
+    var no = (bigRow * 27) + (smallBox * 9)
+    var old_box = (bigRow * 3) + smallBox
+    var new_box = (smallRow * 3) + spaces
     let player = parseInt(document.getElementById('pl-no').innerHTML)
 
 
@@ -316,81 +330,81 @@ function box_color(){
     //         }
     //     }
     // }
-    colored_boxes=[]
-    coloured_bigRows=[]
-    if(document.getElementsByClassName('small-box')[new_box].style.backgroundColor!='rgb(44, 64, 71)' && document.getElementsByClassName('small-box')[new_box].style.backgroundColor!='rgb(0, 0, 0)'){
+    colored_boxes = []
+    coloured_bigRows = []
+    if (document.getElementsByClassName('small-box')[new_box].style.backgroundColor != 'rgb(44, 64, 71)' && document.getElementsByClassName('small-box')[new_box].style.backgroundColor != 'rgb(0, 0, 0)') {
         // console.log('From if Statement')
         document.getElementsByClassName('small-box')[new_box].style.backgroundColor = light_blue
-        document.getElementsByClassName('small-box')[new_box].style.borderColor=dark_blue
+        document.getElementsByClassName('small-box')[new_box].style.borderColor = dark_blue
         colored_boxes.push(spaces)
         coloured_bigRows.push(smallRow)
-        for(var i=0;i<3;i++){
-            for(var j=0;j<3;j++){
-                document.getElementsByClassName('space')[(smallRow*27)+(spaces*9)+(i*3)+j].style.borderColor=dark_blue
+        for (var i = 0; i < 3; i++) {
+            for (var j = 0; j < 3; j++) {
+                document.getElementsByClassName('space')[(smallRow * 27) + (spaces * 9) + (i * 3) + j].style.borderColor = dark_blue
             }
         }
     }
     else {
         // console.log('From Else statement')
-        for(var i=0;i<3;i++){
-            for(var j=0;j<3;j++){
-                    var box=(i*3)+j
-                    var border_c=document.getElementsByClassName('small-box')[box].style.borderColor
-                    if (box != new_box && border_c != 'rgb(102, 252, 241)' && border_c != 'rgb(255, 255, 255)' && border_c != 'rgb(0, 0, 0)') {
-                        
-                        colored_boxes.push(j)
-                        coloured_bigRows.push(i)
-                        document.getElementsByClassName('small-box')[box].style.backgroundColor=light_blue
-                        document.getElementsByClassName('small-box')[box].style.borderColor=dark_blue
-                        for(var p=0;p<3;p++){
-                            for(var q=0;q<3;q++){
-                                document.getElementsByClassName('space')[(i*27)+(j*9)+(p*3)+q].style.borderColor=dark_blue
-                            }
+        for (var i = 0; i < 3; i++) {
+            for (var j = 0; j < 3; j++) {
+                var box = (i * 3) + j
+                var border_c = document.getElementsByClassName('small-box')[box].style.borderColor
+                if (box != new_box && border_c != 'rgb(102, 252, 241)' && border_c != 'rgb(255, 255, 255)' && border_c != 'rgb(0, 0, 0)') {
+
+                    colored_boxes.push(j)
+                    coloured_bigRows.push(i)
+                    document.getElementsByClassName('small-box')[box].style.backgroundColor = light_blue
+                    document.getElementsByClassName('small-box')[box].style.borderColor = dark_blue
+                    for (var p = 0; p < 3; p++) {
+                        for (var q = 0; q < 3; q++) {
+                            document.getElementsByClassName('space')[(i * 27) + (j * 9) + (p * 3) + q].style.borderColor = dark_blue
                         }
                     }
+                }
             }
         }
     }
 
-    if (colored_boxes.length==0) {
+    if (colored_boxes.length == 0) {
         document.getElementsByClassName('box')[0].style.backgroundColor = 'black'
         document.getElementsByClassName('box')[0].style.borderColor = 'black'
         end(true)
     }
-    
+
 }
-function check_small_box(){
-    
-    var match=[]
-    let player=parseInt(document.getElementById('pl-no').innerHTML)
-    var Arr=Arr_box[bigRow][smallBox]
-    for(var i=0;i<3;i++){
-        for(var j=0;j<3;j++){
-            var no=(i*3)+j
-            if(Arr[i][j]==player){
+function check_small_box() {
+
+    var match = []
+    let player = parseInt(document.getElementById('pl-no').innerHTML)
+    var Arr = Arr_box[bigRow][smallBox]
+    for (var i = 0; i < 3; i++) {
+        for (var j = 0; j < 3; j++) {
+            var no = (i * 3) + j
+            if (Arr[i][j] == player) {
                 match.push(no)
             }
         }
     }
     let answer = check_match(match)
-    
-        
-    if(answer){
-        var box=(bigRow*3)+smallBox
-        
-        document.getElementsByClassName('small-box')[box].style.backgroundColor=light_blue
-        document.getElementsByClassName('small-box')[box].style.borderColor=color[player-1]
-        for(var i=0;i<3;i++){
-            for(var j=0;j<3;j++){
-                var no=(bigRow*27)+(smallBox*9)+(i*3)+j
-                document.getElementsByClassName('space')[no].style.borderColor=color[player-1]
+
+
+    if (answer) {
+        var box = (bigRow * 3) + smallBox
+
+        document.getElementsByClassName('small-box')[box].style.backgroundColor = light_blue
+        document.getElementsByClassName('small-box')[box].style.borderColor = color[player - 1]
+        for (var i = 0; i < 3; i++) {
+            for (var j = 0; j < 3; j++) {
+                var no = (bigRow * 27) + (smallBox * 9) + (i * 3) + j
+                document.getElementsByClassName('space')[no].style.borderColor = color[player - 1]
             }
         }
-        Arr_box[bigRow][smallBox]=player
+        Arr_box[bigRow][smallBox] = player
         check_big_box()
     }
-    
-    
+
+
 }
 function check_big_box() {
     var match = []
@@ -407,10 +421,10 @@ function check_big_box() {
     var answer = check_match(match)
     if (answer == true) {
         document.getElementsByClassName('box')[0].style.borderColor = color[player - 1]
-        
-        
+
+
         end(false)
-        
+
     }
 }
 function check_match(arr) {
@@ -443,32 +457,31 @@ function player_change() {
     document.getElementById('pl-no').innerHTML = new_player.toString()
     document.getElementsByClassName('other-elem')[0].style.color = color[new_player - 1]
     document.getElementsByClassName('user')[0].style.color = color[new_player - 1]
-    document.getElementsByClassName('user')[1].style.color=color[new_player-1]
+    document.getElementsByClassName('user')[1].style.color = color[new_player - 1]
     document.getElementsByClassName('dash0')[0].style.stroke = color[new_player - 1]
     document.getElementById('user-text').innerHTML = player_text[new_player - 1]
-    document.getElementById('user').innerHTML=player_order[new_player-1]
+    document.getElementById('user').innerHTML = player_order[new_player - 1]
 }
 const url = window.location.origin + "/me" // change to production url later
 var username = ""
+const leaderboard = window.location.origin + '/score'
 
 function end(input) {
     winner = true
-    last_move=true
+    last_move = true
     console.log('received')
     let player = parseInt(document.getElementById('pl-no').innerHTML)
-    let current_user=document.getElementById('user').innerHTML
+    let current_user = document.getElementById('user').innerHTML
     // document.location.reload(true)
+
     
-    const leaderboard = window.location.origin + '/score'
-    let score = {
-        score:1
-    }
+
     console.log('username', username)
-    console.log('current user',current_user)
+    console.log('current user', current_user)
     if (current_user == username && !input) {
         socket.emit('end-tic-tac-toe', current_user)
         // console.log('Score Sent')
-        end_result=player
+        end_result = player
         // var xhr = new XMLHttpRequest()
         // xhr.open('POST', leaderboard,true)
         // xhr.onreadystatechange = function() { //Call a function when the state changes.
@@ -480,69 +493,136 @@ function end(input) {
         // xhr.send(JSON.stringify(score))
 
 
+        let score = {
+            score: 100,
+            game: 'tic-tac-toe',
+            secret: 'anshal'
+        }
+        fetch(leaderboard, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(score)
+        })
+            .then(response => response.json())
+            .then(result => alert(result.message))
 
-        // let response = await fetch(leaderboard, {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json;charset=utf-8'
-        //     },
-        //     body: JSON.stringify(score)
-        // })
-        // let result = await response.json();
-        // alert(result.message);
     }
     else if (current_user != username && !input) {
         console.log('This player did not win')
-        end_result=player
+        end_result = player
+        let score = {
+            score: 0,
+            game: 'tic-tac-toe',
+            secret: 'anshal'
+        }
+        fetch(leaderboard, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(score)
+        })
+            .then(response => response.json())
+            .then(result => alert(result.message))
     }
     else {
         console.log('Nobody Wins')
     }
-    
-    
-    
-    
-    
+
+
+
+
+
+}
+var timer_self_var, timer_other_player_var, alert_user
+function timer_self() {
+    alert_user=setTimeout(function(){
+        alert('Make a move within the next minute, or the game will be forfeited.')
+    },60000)
+    timer_self_var = setTimeout(function () {
+        document.getElementsByClassName('box')[0].style.display = 'none'
+        document.getElementsByClassName('end')[0].style.display = 'flex'
+        document.getElementsByClassName('end')[0].innerHTML='You lost this game since you haven\'t made a move for 2 minutes.'
+        let score = {
+            score: 0,
+            game: 'tic-tac-toe',
+            secret: 'anshal'
+        }
+        fetch(leaderboard, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(score)
+        })
+            .then(response => response.json())
+            .then(result => alert(result.message))
+    }, 120000)
 }
 
+function timer_other_player() {
+    timer_other_player_var = setTimeout(function () {
+        document.getElementsByClassName('box')[0].style.display = 'none'
+        document.getElementsByClassName('end')[0].style.display = 'flex'
+        document.getElementsByClassName('end')[0].innerHTML='You won this game since your opponent haven\'t made a move for 2 minutes.'
+        let score = {
+            score: 100,
+            game: 'tic-tac-toe',
+            secret: 'anshal'
+        }
+        fetch(leaderboard, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(score)
+        })
+            .then(response => response.json())
+            .then(result => alert(result.message))
+    }, 120000)
+}
 
 async function play() {
     try {
         const res = await fetch(url)
         const user = await res.json()
         username = user.username
-    
-        
+
+
         console.log(user)
         console.log('1st test')
-        socket.emit('join-tic-tac-toe', username, (message) => { 
+        socket.emit('join-tic-tac-toe', username, (message) => {
             console.log(message)
+            close_inst()
             freezeClic = true
             sendClic = false
             document.addEventListener("click", freezeClicFn, true);
-            
+            document.getElementById('user-text').innerHTML = 'Waiting for the other player to join'
             console.log('frozen')
         })
 
         socket.emit('pair-tic-tac-toe', username) // , (bool) => {
-		//     is_paired = bool
-		//     console.log("Paired ", is_paired)
-		//     if (!is_paired) {
-		// 	    console.log("Waiting to pair")
-		//     }
-	    // })
+        //     is_paired = bool
+        //     console.log("Paired ", is_paired)
+        //     if (!is_paired) {
+        // 	    console.log("Waiting to pair")
+        //     }
+        // })
 
         socket.on('start-tic-tac-toe', () => {
             player_1 = true
-            player_order=[username, '']
+            player_order = [username, '']
             player_text = ['Your Turn - ', 'Not Your Turn']
             document.getElementById('user-text').innerHTML = 'Your Turn - '
-            document.getElementById('user').innerHTML=username
+            document.getElementById('user').innerHTML = username
+
             console.log('start')
             freezeClic = false
             sendClic = true
         })
-        
+
         window.onclick = e => {
             if (sendClic) {
                 freezeClic = true
@@ -553,14 +633,16 @@ async function play() {
 
                 var current_player = parseInt(document.getElementById('pl-no').innerHTML)
 
-                if (current_player === opponent && last_move==false) {
+                if (current_player === opponent && last_move == false) {
                     console.log('In the return statement')
                     return
                 }   // replace 1 by opponent user
-                    
+
 
                 console.log('sending ')
-
+                timer_other_player()
+                clearTimeout(alert_user)
+                clearTimeout(timer_self_var)
                 console.log(e.target.id);
                 socket.emit('play-tic-tac-toe', current_player, username, e.target.id, (error) => {
                     if (error) {
@@ -569,7 +651,7 @@ async function play() {
                 })
             }
         }
-        
+
 
         socket.on('opponentPlayed-tic-tac-toe', (opponentRecieved, divId) => {
             console.log(divId)
@@ -584,6 +666,8 @@ async function play() {
             sendClic = false
             freezeClic = false
             console.log('unfrozen')
+            timer_self()
+            clearTimeout(timer_other_player_var)
             // document.removeEventListener('click', DisableClickOnPage.handler, true)
         })
 
@@ -601,3 +685,7 @@ async function play() {
 }
 
 play()
+
+window.onbeforeunload = function () {
+    return "You will lose all your game progress. Are you sure, you want to close?"
+};

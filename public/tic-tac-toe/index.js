@@ -471,13 +471,20 @@ var timer_self_var, timer_other_player_var, alert_user, timer_no_one_joined_var
 let first_move = true
 
 function timer_self() {
-    alert_user = setTimeout(function () {
-        alert('Make a move within the next minute, or the game will be forfeited.')
-    }, 60000)
+    var d=new Date()
+    var time=d.getTime()+(2*60*1000)
+    alert_user = setInterval(function () {
+        let new_time=new Date().getTime()
+        let time_remaining=Math.floor((time-new_time)/1000)
+        
+        document.getElementById('self_timer').innerHTML='Time Remaining - '+time_remaining+' seconds'
+    }, 900)
     timer_self_var = setTimeout(function () {
         document.getElementsByClassName('box')[0].style.display = 'none'
         document.getElementsByClassName('end')[0].style.display = 'flex'
         document.getElementsByClassName('end')[0].innerHTML = 'You lost this game since you haven\'t made a move for 2 minutes.'
+        clearInterval(alert_user)
+        document.getElementById('self_timer').innerHTML=''
         let score = {
             score: 0,
             game: 'tic-tac-toe',
@@ -496,6 +503,7 @@ function timer_self() {
 }
 
 function timer_other_player() {
+    document.getElementById('self_timer').innerHTML=''
     timer_other_player_var = setTimeout(function () {
         document.getElementsByClassName('box')[0].style.display = 'none'
         document.getElementsByClassName('end')[0].style.display = 'flex'
@@ -549,7 +557,7 @@ function end(input) {
     // document.location.reload(true)
     clearTimeout(timer_other_player_var)
     console.log('Cleared Other Player Timer')
-    clearTimeout(alert_user)
+    clearInterval(alert_user)
     console.log('Cleared alert Timer')
     clearTimeout(timer_self_var)
     console.log('Cleared Self Timer')
@@ -683,7 +691,7 @@ async function play() {
                 else {
                     timer_other_player()
                     console.log('Other Player Timer')
-                    clearTimeout(alert_user)
+                    clearInterval(alert_user)
                     console.log('Cleared Alert Timer')
                     clearTimeout(timer_self_var)
                     console.log('Cleared Self Timer')

@@ -99,8 +99,11 @@ function start(){
 	socket.emit('pair-chain-reaction', async(bool, id, myName, opponentName) => {
         
         document.getElementById("player1").innerText=username.toUpperCase()
+	document.getElementById("player1").style.color="red";
+
         // myName and OpponentName may be jumbled, thus the check
         document.getElementById("player2").innerText=myName==username?opponentName.toUpperCase():myName.toUpperCase()
+        document.getElementById("player2").style.color="blue";
 
         opponent.id = id
 		is_paired = bool
@@ -362,6 +365,7 @@ function check(count_moves,player){
 }
 
 function gameOver(player){
+    clearInterval(oppTimerDisplay)
     document.getElementsByClassName('container')[0].style.zIndex="0";
     cssMultiStyles('over',{'visibility':"visible",'z-index':"9999",'transform':'translateY(-100vh)',  'transition': 'transform 1s'})
     winner=player.match(/\d+/g);
@@ -420,8 +424,11 @@ async function play() {
         socket.on('start-chain-reaction', (opponent_id, myName, opponentName) => {
             
             document.getElementById("player1").innerText=username.toUpperCase()
+	    document.getElementById("player1").style.color="blue";
+
             // myName and OpponentName may be jumbled, thus the check
             document.getElementById("player2").innerText=myName.toUpperCase()==username.toUpperCase()?opponentName.toUpperCase():myName.toUpperCase()
+	    document.getElementById("player2").style.color="red";
 
 			opponent.id = opponent_id
 			console.log(opponent.id)
@@ -440,6 +447,9 @@ async function play() {
 
 		socket.on('unfreezeOpponent-chain-reaction', () => {
             console.log("unfreeze, make your move")
+	    clearInterval(oppTimerDisplay)
+            document.getElementById("waiting").innerText="";
+
             document.getElementsByClassName('container')[0].style.pointerEvents = "auto";
             if(!gameComplete){
                 clearTimeout(opponentTimer)
@@ -450,6 +460,12 @@ async function play() {
 
 		socket.on('freezePlayer-chain-reaction', () => {
 			console.log("freeze, waiting for opponent's move")
+			oppTime=91
+			oppTimerDisplay=setInterval(()=>{
+				oppTime-=1
+				document.getElementById("waiting").innerText="Waiting for opponent's move\n"+"( "+oppTime+" )";
+			},1000)
+			document.getElementById("timer").innerText=""
 			document.getElementsByClassName('container')[0].style.pointerEvents = "none";
         })
         

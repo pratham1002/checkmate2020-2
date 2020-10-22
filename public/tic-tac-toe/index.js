@@ -651,7 +651,8 @@ async function play() {
         //     }
         // })
 
-        socket.on('start-tic-tac-toe', () => {
+        socket.on('start-tic-tac-toe', (player1, player2) => {
+            console.log(player1, player2)
             player_1 = true
             player_order = [username, '']
             player_text = ['Your Turn - ', 'Not Your Turn']

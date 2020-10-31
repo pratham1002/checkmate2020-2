@@ -108,6 +108,21 @@ let first_time = true
 let player_1 = false
 let end_result = 0
 
+function start_game(is_player_1, other_player, you) {
+    if (is_player_1) {
+        player_order = [you, other_player]
+        player_text = ['Your Turn - ', 'Not Your Turn']
+        document.getElementById('user-text').innerHTML = 'Your Turn - '
+        document.getElementById('user').innerHTML = username+' is playing'
+    }
+    else {
+        player_order = [other_player, you]
+        player_text = ['Not Your Turn', 'Your Turn - ']
+        document.getElementById('user-text').innerHTML = 'Not Your Turn'
+        document.getElementById('user').innerHTML = other_player+' is playing'
+    }
+}
+
 function open_inst() {
     document.getElementsByClassName('instructions')[0].style.display = 'flex'
     document.getElementsByClassName('box')[0].style.display = 'none'
@@ -119,12 +134,11 @@ function close_inst() {
     console.log('closed')
 }
 
+
 function space(input) {
     var no = (smallRow * 3) + input
     if (first_time && player_1 == false) {
-        player_order = ['', username]
-        player_text = ['Not Your Turn', 'Your Turn - ']
-        document.getElementById('user-text').innerHTML = 'Not Your Turn'
+        start_game(false,'',username)
         first_time = false
     }
 
@@ -461,7 +475,7 @@ function player_change() {
     document.getElementsByClassName('user')[1].style.color = color[new_player - 1]
     document.getElementsByClassName('dash0')[0].style.stroke = color[new_player - 1]
     document.getElementById('user-text').innerHTML = player_text[new_player - 1]
-    document.getElementById('user').innerHTML = player_order[new_player - 1]
+    document.getElementById('user').innerHTML = player_order[new_player - 1]+' is playing'
 }
 const url = window.location.origin + "/me" // change to production url later
 var username = ""
@@ -471,20 +485,20 @@ var timer_self_var, timer_other_player_var, alert_user, timer_no_one_joined_var
 let first_move = true
 
 function timer_self() {
-    var d=new Date()
-    var time=d.getTime()+(2*60*1000)
+    var d = new Date()
+    var time = d.getTime() + (2 * 60 * 1000)
     alert_user = setInterval(function () {
-        let new_time=new Date().getTime()
-        let time_remaining=Math.floor((time-new_time)/1000)
-        
-        document.getElementById('self_timer').innerHTML='Time Remaining - '+time_remaining+' seconds'
+        let new_time = new Date().getTime()
+        let time_remaining = Math.floor((time - new_time) / 1000)
+
+        document.getElementById('self_timer').innerHTML = 'Time Remaining - ' + time_remaining + ' seconds'
     }, 900)
     timer_self_var = setTimeout(function () {
         document.getElementsByClassName('box')[0].style.display = 'none'
         document.getElementsByClassName('end')[0].style.display = 'flex'
         document.getElementsByClassName('end')[0].innerHTML = 'You lost this game since you haven\'t made a move for 2 minutes.'
         clearInterval(alert_user)
-        document.getElementById('self_timer').innerHTML=''
+        document.getElementById('self_timer').innerHTML = ''
         let score = {
             score: 0,
             game: 'tic-tac-toe',
@@ -503,7 +517,7 @@ function timer_self() {
 }
 
 function timer_other_player() {
-    document.getElementById('self_timer').innerHTML=''
+    document.getElementById('self_timer').innerHTML = ''
     timer_other_player_var = setTimeout(function () {
         document.getElementsByClassName('box')[0].style.display = 'none'
         document.getElementsByClassName('end')[0].style.display = 'flex'
@@ -651,13 +665,10 @@ async function play() {
         //     }
         // })
 
-        socket.on('start-tic-tac-toe', (player1, player2) => {
+        socket.on('start-tic-tac-toe', (player2, player1) => {
             console.log(player1, player2)
             player_1 = true
-            player_order = [username, '']
-            player_text = ['Your Turn - ', 'Not Your Turn']
-            document.getElementById('user-text').innerHTML = 'Your Turn - '
-            document.getElementById('user').innerHTML = username
+            start_game(true,player2,username)
 
             timer_self()
             console.log('Self Timer')

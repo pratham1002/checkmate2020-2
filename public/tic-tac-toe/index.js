@@ -665,9 +665,9 @@ async function play() {
         //     }
         // })
 
-        socket.on('start-tic-tac-toe', (player2, player1) => {
+        socket.on('start-tic-tac-toe', (player2, player1, t) => {
             console.log(player1, player2)
-            player_1 = true
+            player_1 = t
             start_game(true,player2,username)
 
             timer_self()

@@ -45,7 +45,7 @@ io.on('connection', (socket) => {
                 if (user !== undefined) {
                     
                     socket.to(user.room).emit('start-tic-tac-toe', user.username, opponent.username, true)
-                    socket.to(opponent.room).emit('start-tic-tac-toe', opponent.username, user.username, false)
+                    socket.to(opponent.room).emit('start-tic-tac-toe', user.username, opponent.username, false)
                 }                
             }
             else {

@@ -19,7 +19,7 @@ const userSchema = new mongoose.Schema({
 		required: true,
 		validate: {
 			validator : function (id) {
-				return /201[0-9][A-Za-z0-9]{4}[0-9]{4}[pP]/.test(id)
+				return /20[1-2][0-9][A-Za-z0-9]{4}[0-9]{4}[pP]/.test(id)
 			}
 		}
 	},

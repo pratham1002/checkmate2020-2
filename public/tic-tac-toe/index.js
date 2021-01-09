@@ -665,11 +665,10 @@ async function play() {
         //     }
         // })
 
-        socket.on('start-tic-tac-toe', (player2, player1) => {
+        socket.on('start-tic-tac-toe', (player2, player1, t) => {
             console.log(player1, player2)
             player_1 = true
             start_game(true,player2,player1)
-
             timer_self()
             console.log('Self Timer')
             clearTimeout(timer_no_one_joined_var)
@@ -686,7 +685,6 @@ async function play() {
                 document.addEventListener("click", freezeClicFn, true);
 
                 console.log('frozen')
-
                 var current_player = parseInt(document.getElementById('pl-no').innerHTML)
 
                 if (current_player === opponent && last_move == false) {

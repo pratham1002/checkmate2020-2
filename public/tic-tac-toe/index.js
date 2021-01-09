@@ -512,7 +512,7 @@ function timer_self() {
             body: JSON.stringify(score)
         })
             .then(response => response.json())
-            .then(result => alert(result.message))
+            .then(result => console.log(result.message))
     }, 120000)
 }
 
@@ -535,7 +535,7 @@ function timer_other_player() {
             body: JSON.stringify(score)
         })
             .then(response => response.json())
-            .then(result => alert(result.message))
+            .then(result => console.log(result.message))
     }, 120000)
 }
 
@@ -668,7 +668,7 @@ async function play() {
         socket.on('start-tic-tac-toe', (player2, player1) => {
             console.log(player1, player2)
             player_1 = true
-            start_game(true,player2,username)
+            start_game(true,player2,player1)
 
             timer_self()
             console.log('Self Timer')

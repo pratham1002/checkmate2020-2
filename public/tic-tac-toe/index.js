@@ -113,13 +113,13 @@ function start_game(is_player_1, other_player, you) {
         player_order = [you, other_player]
         player_text = ['Your Turn - ', 'Not Your Turn']
         document.getElementById('user-text').innerHTML = 'Your Turn - '
-        document.getElementById('user').innerHTML = username+' is playing'
+        document.getElementById('user').innerHTML = username + ' is playing'
     }
     else {
         player_order = [other_player, you]
         player_text = ['Not Your Turn', 'Your Turn - ']
         document.getElementById('user-text').innerHTML = 'Not Your Turn'
-        document.getElementById('user').innerHTML = other_player+' is playing'
+        document.getElementById('user').innerHTML = other_player + ' is playing'
     }
 }
 
@@ -137,7 +137,7 @@ function close_inst() {
 
 function space(input) {
     var no = (smallRow * 3) + input
-    
+
     spaces = input
     if (Arr_box[bigRow][smallBox] == 1 || Arr_box[bigRow][smallBox] == 2) {
         sendClic = false
@@ -471,7 +471,7 @@ function player_change() {
     document.getElementsByClassName('user')[1].style.color = color[new_player - 1]
     document.getElementsByClassName('dash0')[0].style.stroke = color[new_player - 1]
     document.getElementById('user-text').innerHTML = player_text[new_player - 1]
-    document.getElementById('user').innerHTML = player_order[new_player - 1]+' is playing'
+    document.getElementById('user').innerHTML = player_order[new_player - 1] + ' is playing'
 }
 const url = window.location.origin + "/me" // change to production url later
 var username = ""
@@ -662,13 +662,22 @@ async function play() {
         // })
 
         socket.on('start-tic-tac-toe', (player1, player2) => {
-            console.log('start called')
+
             console.log(player1, player2)
-            player_1 = t
-            
-            start_game(t,player2,player1)
-            timer_self()
-            console.log('Self Timer')
+
+            if (username == player1) {
+                start_game(true, player2, player1)
+                timer_self()
+                console.log('Self Timer')
+            }
+            else {
+                start_game(false, player1, player2)
+                timer_other_player()
+                console.log('Other Player Timer')
+            }
+
+
+
             clearTimeout(timer_no_one_joined_var)
             console.log('Cleared No one Joined Timer')
             console.log('start')
@@ -696,7 +705,7 @@ async function play() {
                 if (last_move == true) {
                     console.log('Game Over')
                 }
-                else {
+                else {  
                     timer_other_player()
                     console.log('Other Player Timer')
                     clearInterval(alert_user)
@@ -728,15 +737,15 @@ async function play() {
             freezeClic = false
             console.log('unfrozen')
 
-            if (first_move == true) {
-                clearTimeout(timer_no_one_joined_var)
-                console.log('Cleared No one Joined Timer')
-                timer_self()
-                console.log('Self Timer')
-                first_move = false
-                console.log('first move= ', first_move)
-            }
-            else if (last_move == true) {
+            // if (first_move == true) {
+            //     // clearTimeout(timer_no_one_joined_var)
+            //     // console.log('Cleared No one Joined Timer')
+            //     // timer_self()
+            //     // console.log('Self Timer')
+            //     first_move = false
+            //     console.log('first move= ', first_move)
+            // }
+            if (last_move == true) {
                 console.log('Game Over')
             }
             else {

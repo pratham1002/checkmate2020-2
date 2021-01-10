@@ -137,11 +137,7 @@ function close_inst() {
 
 function space(input) {
     var no = (smallRow * 3) + input
-    if (first_time && player_1 == false) {
-        start_game(false,'',username)
-        first_time = false
-    }
-
+    
     spaces = input
     if (Arr_box[bigRow][smallBox] == 1 || Arr_box[bigRow][smallBox] == 2) {
         sendClic = false
@@ -557,7 +553,7 @@ function timer_no_one_joined() {
             body: JSON.stringify(score)
         })
             .then(response => response.json())
-            .then(result => alert(result.message))
+            .then(result => console.log(result.message))
     }, 240000)
 }
 
@@ -667,8 +663,9 @@ async function play() {
 
         socket.on('start-tic-tac-toe', (player2, player1, t) => {
             console.log(player1, player2)
-            player_1 = true
-            start_game(true,player2,player1)
+            player_1 = t
+            
+            start_game(t,player2,player1)
             timer_self()
             console.log('Self Timer')
             clearTimeout(timer_no_one_joined_var)

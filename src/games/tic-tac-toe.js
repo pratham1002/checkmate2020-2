@@ -41,11 +41,9 @@ io.on('connection', (socket) => {
                 console.log(username)
                 
                 const user = getUser(username)
-                const opponent = getOpponent(user.id)
                 if (user !== undefined) {
-                    
-                    socket.to(user.room).emit('start-tic-tac-toe', user.username, opponent.username, true)
-                    socket.to(opponent.room).emit('start-tic-tac-toe', user.username, opponent.username, false)
+                    const opponent = getOpponent(socket.id)
+                    io.sockets.in(user.room).emit('start-tic-tac-toe', user.username, opponent.username)
                 }                
             }
             else {

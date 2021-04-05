@@ -36,8 +36,9 @@ io.on('connection', (socket) => {
         try {
             if (isPaired(socket.id)) {
                 const opponent = getOpponent(socket.id)
-                callback(true, opponent.id)
-                io.to(opponent.id).emit('start-chain-reaction', opponent.id)
+                const roomUsers = getUsersInRoom(opponent.room)
+                callback(true, opponent.id, roomUsers[0].username, roomUsers[1].username)
+                io.to(opponent.id).emit('start-chain-reaction', opponent.id, roomUsers[1].username, roomUsers[0].username)
                 io.to(opponent.id).emit('freezePlayer-chain-reaction')
                 
             }
@@ -67,9 +68,6 @@ io.on('connection', (socket) => {
                 socket.to(user.room).emit('unfreezeOpponent-chain-reaction')
                 io.to(socket.id).emit('freezePlayer-chain-reaction')
             }
-            else {
-                console.log("invalid move")
-            }
         }
         catch (e) {
             console.log(e)
@@ -80,11 +78,11 @@ io.on('connection', (socket) => {
         try{        
             if (not_opponent) {
                 const winner = getUser(user)
-                console.log(winner)
+                socket.emit('winner-score-update',winner.username)
             }
             else {
                 const winner = getOpponent(user)
-                console.log(winner)
+                socket.emit('winner-score-update',winner.username)
             }
         }
         catch (e) {
@@ -92,8 +90,32 @@ io.on('connection', (socket) => {
         }
     })
 
+    socket.on('opponent-leaves-win', (username) => {
+        socket.emit('winner-score-update', username)
+    })
+
     socket.on('disconnect', () => {
-        const user = removeUser(socket.id)
+        // socket id of the removed user
+        // both users are still in paired users array
+        const user = getUser(socket.id)
+        try {
+            const oldRoom = user.room
+            const opponent = getPairedUsers().find((user) => {
+                return user.room === oldRoom && user.id != socket.id
+            })
+            socket.to(user.room).emit('opponent-leaves', opponent)
+            
+            const pairedUsers = getPairedUsers().filter((user) => user.room === oldRoom)
+            pairedUsers.forEach((user) => {
+                // first remove from pairedUsers, then from users array
+                removeUser(user.id)
+                removeUser(user.id)
+            })
+        }
+        catch (e) {
+            removeUser(socket.id)
+            console.log("the user wasn't paired")
+        }
         console.log('Paired', getPairedUsers())
         console.log('Unpaired', getUnpairedUsers())
     })

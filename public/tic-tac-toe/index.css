@@ -1,3 +1,4 @@
+
 @media all and (min-width: 720px){
     .heading{
         margin-top: 2vh;
@@ -11,12 +12,22 @@
         top: 1vh;
         right: 1vh;
     }
+    .instruction-button{
+        position: fixed;
+        top: 5vh;
+        left: 5vw;
+    }
     .player{
         font-size: 1em;
     }
+    .user{
+        font-size: 0.7em;
+        margin-top: .75vh;
+    }
     .player-img{
         height: 10vh;
-        width: 10vh;
+        
+        width: 0vh;
         margin: 3vh;
     }
     .dash0{
@@ -24,9 +35,20 @@
         width: 10vh;
     }
     .box{
+        
+        left: 30vw;
+    }
+    .box,.instructions{
         width: 40vw;
         height: 40vw;
         padding: 1vw;
+    }
+    .instructions{
+        padding: 3vw;
+    }
+    .instructions{
+        min-height: 40vw;
+        overflow: hidden;
     }
     .small-box{
         height: 10vw;
@@ -50,8 +72,12 @@
         margin-bottom: 10vh;
         word-wrap: none;
     }
+    .instruction-button{
+        margin-top: 15vh;
+    }
     .other-elem{
         min-width: 10vw;
+        
         flex-direction: column;
         /* position: fixed;
         top: 15vh;
@@ -60,15 +86,21 @@
     .player{
         font-size: 1em;
         position: fixed;
-        top: 18vh;
-        left: 35vw;
+        top: 23vh;
+        left: 38vw;
+        width: 25vw;
+    }
+    .user{
+        font-size: 0.8em;
+        margin-top: .5vh;
     }
     .player-img{
         height: 4vh;
+        display: none;
         width: 4vh;
         margin: 3vh;
         position: fixed;
-        top: 14vh;
+        top: 18vh;
         right: 23vw;
     }
     .dash0{
@@ -76,11 +108,16 @@
         width: 4vh;
     }
     .box{
+        top: 30vh;
+        left: .53vw;
+    }
+    .box,.instructions{
         width: 95vw;
         height: 95vw;
         padding: 1vw;
         margin-top: 7vh;
     }
+    
     .small-box{
         height: 25vw;
         width: 25vw;
@@ -94,7 +131,23 @@
         padding: 0.333333vw;
     }
 }
-
+@media all and (max-width: 1130px){
+    .instructions{
+        overflow-x: hidden;
+        overflow-y: scroll;
+    }
+   
+}
+@media all and (max-width: 1499px) and (min-width:720px){
+    .box{
+        top: 20vh;
+    }
+}
+@media all and (min-width: 1500px){
+    .box{
+        top: 10vh;
+    }
+}
 
 body{
     overflow-x: hidden;
@@ -123,7 +176,7 @@ body{
     justify-content: center;
     font-weight: bolder;
 
-    color: #add3e0;
+    color: #ffffff;
 }
 .other-elem{
     display: flex;
@@ -133,29 +186,87 @@ body{
 
 
 }
+.instruction-button{
+    position: fixed;
+    display: flex;
+    text-align: center;
+    flex-direction: column;
+    font-size: 1em;
+    color: #add3e0;
+    cursor: pointer;
+}
+#self_timer{
+    font-size: 0.7em;
+    color:white;
+    padding-top: 0.5em;
+}
 .player{
 
-
+    text-align: center;
     justify-content: space-evenly;
     align-items: center;
     font-weight: bold;
     display: flex;
     /* justify-content: center; */
-
+    flex-direction: column;
 }
 
 .dash0{
-    stroke:#66FCF1;
+    stroke:#17252A;
 
     stroke-width:3;
     fill:none;
 }
-.box{
-
+.box,.end,.instructions{
+    border:solid 4px transparent;
     background-color: #2c4047;
     fill-opacity: 0.5;
 
 
+}
+.box{
+    position: fixed;
+}
+.instructions{
+    
+    display: flex;
+    flex-direction: column;
+}
+.instruction-heading{
+    width: 100%;
+    display: block;
+    text-align: center;
+    font-size: 1.5em;
+    font-weight: bolder;
+    margin-bottom: 3vh;
+    color: #ffffff;
+}
+.close-button{
+    position: relative;
+    text-align: right;
+    right: 0;
+    top: 0;
+    font-size: small;
+    color: #add3e0;
+    cursor: pointer;
+}
+.content{
+    font-size: medium;
+    font-weight: lighter;
+    color: #ffffff
+}
+.end{
+    padding: 5vh;
+    border-radius: 5px;
+    margin-top: 15vh;
+    min-height: 20vh;
+    min-width: 20vw;
+    font-weight: bolder;
+    display:none;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    color: #add3e0;
 }
 .box,.small-box{
     display: flex;
@@ -171,6 +282,7 @@ body{
 
 }
 .small-box{
+    
     opacity: 1;
     z-index: 2;
     background-color:#17252A ;

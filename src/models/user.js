@@ -19,7 +19,7 @@ const userSchema = new mongoose.Schema({
 		required: true,
 		validate: {
 			validator : function (id) {
-				return /201[0-9][A-Za-z0-9]{4}[0-9]{4}[pP]/.test(id)
+				return /20[1-2][0-9][A-Za-z0-9]{4}[0-9]{4}[pP]/.test(id)
 			}
 		}
 	},
@@ -39,6 +39,9 @@ const userSchema = new mongoose.Schema({
 			type: String,
 		}
 	}],
+	games: {
+		type: Object
+	}
 }, {
 	timestamps: true
 })
@@ -61,6 +64,32 @@ userSchema.statics.findByCredentials = async (username, password) => {
 
 userSchema.pre('save', async function (next) {
 	const user = this 
+	if (!user.games) {
+		user.games = {
+			"tic-tac-toe": false,
+			"master-mind": false,
+			"chain-reaction": false,
+			"mask-room": false,
+			"bounce-room": false,
+			"mirror-game": false,
+			"tetris": false,
+			"path-game": false,
+			"checkers": false,
+			"puzzle1": false,
+			"puzzle2": false,
+			"puzzle3": false,
+			"puzzle4": false,
+			"puzzle5": false,
+			"puzzle6": false,
+			"puzzle7": false,
+			"puzzle8": false,
+			"puzzle9": false,
+			"puzzle10": false,
+			"puzzle11": false,
+			"puzzle12": false,
+			"puzzle13": false,
+		}
+	}
 	if (user.isModified('password')) {
 		user.password = await bcrypt.hash(user.password, 8)
 	}
@@ -80,7 +109,6 @@ userSchema.methods.toJSON = function () {
 userSchema.methods.generateAuthToken = async function () {
 	const user = this 
 	const token = jwt.sign({ _id: user._id.toString() }, process.env.SECRET_KEY) 
-
 	user.tokens = user.tokens.concat({ token }) 
 	await user.save() 
 

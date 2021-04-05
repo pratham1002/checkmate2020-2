@@ -1,4 +1,5 @@
 const { io } = require("../app")
+const User = require('../models/user')
 
 const {
     addUser,
@@ -23,9 +24,9 @@ io.on('connection', (socket) => {
             }
 
             socket.join(user.room)
-
-            console.log('Paired on join', getPairedUsers())
-            console.log('Unpaired', getUnpairedUsers())
+              
+            console.log('Paired sers list:', getPairedUsers())
+            console.log('Unpaired users list:', getUnpairedUsers()); 
 
             callback('joined')
         }
@@ -38,16 +39,15 @@ io.on('connection', (socket) => {
         try {
             if (isPaired(socket.id)) {
                 console.log(username)
-                const user = getUser(username)
-                // const opponent = getOpponent(socket.id)
-                // callback(true, opponent.id)
-                socket.to(user.room).emit('start-tic-tac-toe')
-                // io.to(opponent.id).emit('freezePlayer')
                 
+                const user = getUser(username)
+                if (user !== undefined) {
+                    const opponent = getOpponent(socket.id)
+                    io.sockets.in(user.room).emit('start-tic-tac-toe', user.username, opponent.username)
+                }                
             }
             else {
                 console.log('unpaired')
-                //callback(false)
             }
         }
         catch (e) {
@@ -58,12 +58,17 @@ io.on('connection', (socket) => {
     socket.on('play-tic-tac-toe', (opponent, username, divId) => {
         const user = getUser(username)
         // console.log(user.room)
-        socket.to(user.room).emit('opponentPlayed-tic-tac-toe', opponent, divId);
+        if (user !== undefined) {
+            socket.to(user.room).emit('opponentPlayed-tic-tac-toe', opponent, divId);
+        }
         // callback();
     })
 
-    socket.on('end-tic-tac-toe', (player) => {
+    socket.on('end-tic-tac-toe', async (player) => {
         // winner recieved from client side, run database changes here
+        const user = await User.findOne({ username: player })
+        user.score += 91
+        await user.save()
     })
 
     socket.on('disconnect', () => {

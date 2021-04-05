@@ -67,7 +67,7 @@ const removeUser = (id) => {
 }
 
 const getUser = (id) => {
-    console.log("trying to find user")
+    // console.log("trying to find user")
     const user = pairedUsers.find((user) => user.username === id)
 
     return user;

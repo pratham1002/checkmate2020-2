@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    </head>
+    <style>
+        body{
+           background:linear-gradient(to right, rgb(15, 32, 39), rgb(32, 58, 67), rgb(44, 83, 100))
+        }
+        
+        .container{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .table-responsive{
+            box-shadow: 5px 5px 20px 2px black;
+            border: 2px black solid;
+            overflow: visible ;
+            background-color: white;
+            text-align: center;
+            max-height: 100%;
+        }
+
+        table{
+            margin-bottom: 0!important;
+        }
+
+        .title{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        tbody>tr:hover{
+            transition: all 0.15s ease-in-out;
+            transform: scale(1.02,1.1);
+            box-shadow: 3px 3px 20px 2px black;
+        }
+
+        .title>span{
+            padding: 0.5vh;
+        }
+
+        .title>span>img{
+            height: 5vh;
+        }
+
+        th{
+            background-color: #4364F7;
+        }
+
+        th, td{
+            text-align: center;
+        }
+        
+        tr:nth-child(even){
+           background-color: #8bdffd;
+        }
+
+        tr:nth-child(odd){
+           background-color: #60d2fc;
+        }
+
+        .player{
+            background-color: #009FFF!important;
+            color: white;
+            font-weight: 700;
+            border: 4px solid white;
+        }
+    </style>
+    <body>
+        <div class="container col-lg-6 ">
+            <div class="table-responsive">
+                <div class="title">
+                    <span>
+                        <img src="./assets/iconmonstr-trophy-13.svg"> 
+                    </span>
+                    <span class="h2" >
+                        LEADERBOARD
+                    </span>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Username</th>
+                            <th>Score</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% for (let entry of data.allPlayers){ %>
+                            <tr>
+                                <td><%= data.allPlayers.indexOf(entry)+1 %></td>
+                                <td><%= entry.username %></td>
+                                <td><%= entry.score %></td>
+                            </tr>
+                        <% } %>
+                        <tr class="player">
+                            <td><%= data.playerRank %></td>
+                            <td><%= data.player %></td>
+                            <td><%= data.playerScore %></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </body>
+</html>
